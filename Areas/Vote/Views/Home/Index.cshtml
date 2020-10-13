@@ -1,0 +1,64 @@
+﻿@model Lagsoba94.Areas.Vote.Models.ViewModel.LoginVM
+
+@{
+    Layout = "";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REFER.</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css">
+    <link href="~/Content/style.css" rel="stylesheet" />
+</head>
+<body>
+    <!-- Full Page Header -->
+    <section class="homepage">
+        <div class="container">
+            <div class="row" style="height: 100vh; position: relative;">
+                <div class="col-sm-6 h-100 illustration">
+                    <div class="d-flex flex-column align-items-center justify-content-center h-100">
+                        <div class="decide-illustration">
+                            <img src="~/Content/assets/img/undraw_decide_3iwx.svg" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 h-100">
+                    <div class="d-flex flex-column align-items-center justify-content-center h-100">
+                        <div class="login-form">
+                            <h2 class="mb-3 text-uppercase"> Hello.</h2>
+                            @using (Html.BeginForm("GrantAccess", "Home", routeValues: new { returnUrl = ViewBag.ReturnUrl }))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.ValidationMessage("loginError", htmlAttributes: new { @class = "text-danger" })
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "" })
+                                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Email, "", htmlAttributes: new { @class = "text-danger" })
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.VoterId, htmlAttributes: new { @class = "" })
+                                    @Html.EditorFor(model => model.VoterId, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.VoterId, "", htmlAttributes: new { @class = "text-danger" })
+                                </div>
+
+                                <button type="submit" class="btn btn-submit">CHECK IN <i class="fas fa-angle-right text-white"></i> </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,215 @@
+﻿@model Lagsoba94.Models.IndexViewModel
+
+<link href="~/Content/auth.css" rel="stylesheet" />
+<style>
+    .hideLoader {
+        display: none;
+    }
+
+    .showLoader {
+        display: inherit !important;
+    }
+</style>
+
+
+<div class="top-photo">
+    <img src="https://picsum.photos/seed/picsum/2000/500">
+</div>
+
+<div class="container pt-25">
+
+    <div class="row">
+        <div class="col-lg-4 my-5">
+            <div class="user-card">
+                <div class="profile-img-wrap center">
+                    @if (Model.UserImage != null)
+                    {
+                        <img class="inline-block mb-10" src="@Model.UserImage" alt="@Model.Profile.FirstName">
+                    }
+                    else
+                    {
+                        <img class="inline-block mb-10" src="~/Content/assets/img/user.jpg" alt="@Model.Profile.FirstName" />
+                    }
+                </div>
+                <div class="user-description">
+                    <h5 > @Model.Profile.Title @Model.Profile.FirstName @Model.Profile.LastName.ToString()</h5>
+                    <span class="font-weight-bold">@Model.Profile.Profession</span>
+                </div>
+                <div class="user-description">
+                    <div>
+                        <span class="font-weight-bold mr-2">Email: </span>
+                        <span>@Model.Profile.Email</span>
+                    </div>
+                    <div>
+                        <span class="font-weight-bold mr-2">Phone: </span>
+                        <span>@(Model.PhoneNumber ?? "N/A")</span>
+                    </div>
+                    <div>
+                        <span class="font-weight-bold mr-2">Gender:</span>
+                        <span>@Model.Profile.Gender</span>
+                    </div>
+                    <div>
+                        <span class="font-weight-bold mr-2">Date of Birth:</span>
+                        <span>@Model.Profile.DOB.Value.ToShortDateString()</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8 my-5">
+            <div class="row h-100">
+                <div class="col-lg-12 user-card px-3">
+                    <div class="info">
+                        <h5 class="py-3">Biography/Short Info</h5>
+
+                        <div class="bio">
+                            <p>@Model.Profile.Profile</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-12 user-card mt-2">
+                    <div class="row h-100 px-3">
+                        <div class="col-12 col-lg-8">
+                            <div class="info">
+                                <h5 class="py-3">Contact Information</h5>
+                                <div>
+                                    <span class="font-weight-bold text-uppercase">Address:</span>
+                                    <span>@Model.UserAddresss.Address</span>
+                                </div>
+                                <div>
+                                    <span class="font-weight-bold text-uppercase">City:</span>
+                                    <span>@Model.UserAddresss.City</span>
+                                </div>
+                                <div>
+                                    <span class="font-weight-bold text-uppercase">State:</span>
+                                    <span>@Model.UserAddresss.State</span>
+                                </div>
+                                <div>
+                                    <span class="font-weight-bold text-uppercase">Zip:</span>
+                                    <span>@(Model.UserAddresss.Zip ?? "N/A")</span>
+                                </div>
+                                <div>
+                                    <span class="font-weight-bold text-uppercase">Country:</span>
+                                    <span>@Model.UserAddresss.Country</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-4">
+                            <div class="other my-2">
+                                <h5 class="py-3">ACTION</h5>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <div>
+                                            <span>
+                                                <img class="removeAdminloader hideLoader" src="~/img/loader.gif"  style="height:auto; width:15px; margin-left:5px;" />
+                                        </span>
+
+                                        @*<hr />*@
+
+                                        @if (Model.IsExecutive == true)
+                                        {
+                                            <p>@Model.Profile.FirstName.ToUpper() is an executive</p>
+                                            <input type="submit" value="Remove @Model.Profile.FirstName.ToUpper() as an executive"
+                                                   onclick="removeExecutive(@Model.Profile.Id)" class="text-danger btn btn-sm btn-danger remove-executive my-1" />
+                                        }
+                                        else
+                                        {
+                                            <p>@Model.Profile.FirstName.ToUpper() is <text class="text-danger">NOT</text> an executive</p>
+                                            <input type="submit" value="Make @Model.Profile.FirstName.ToUpper() an executive"
+                                                   onclick="makeExecutive(@Model.Profile.Id)" class="btn btn-sm btn-primary make-executive my-1" />
+                                        }
+                                    </div>
+
+
+                                    @*<div class="mt-3">
+                                        <h4>News Management</h4>
+                                        <ul class="list-group">
+                                            <li class="list-group-item">
+                                                <a href="~/blog/add-news">
+                                                    Publish News
+                                                </a>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <a href="~/profile/news-management">
+                                                    Approve / Decline News
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>*@
+                                }
+
+                                else if (User.IsInRole("Electoral Admin") || User.IsInRole("Electoral Supervisor"))
+                                {
+                                    <div>
+                                        <a href="~/profile/all-voters"> Vote App Users </a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    @*<div class="col-lg-4 col-xs-12">
+                                            <div class="mt-3">
+                                                <h4>News Management</h4>
+                                                <ul class="list-group">
+                                                    <li class="list-group-item">
+                                                        <a href="~/blog/add-news">
+                                                            Publish News
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                    </div>*@
+                                }
+                            </div>
+                        </div>
+                    </div>  
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+
+        function makeExecutive(userId) {
+              $('.makeExecutive').addClass('showLoader')
+            var txt = prompt("What Office does this person occupy?", "");
+            if (txt == null || txt == "") {
+                return false;
+            } else {
+                var data = { "userId": userId, "officeName": txt }
+                $.ajax({
+                    type: "GET",
+                    url: "/profile/make-executive/",
+                    cache: false,
+                    dataType: "text",
+                    data: data
+                }).done(function (msg) {
+                    //alert(msg);
+                    window.location.reload()
+                });
+            }
+          
+
+        }
+
+        function removeExecutive(userId) {
+            $('.removeExecutive').addClass('showLoader')
+            var data = { "userId": userId }
+            $.ajax({
+                type: "GET",
+                url: "/profile/remove-executive/",
+                cache: false,
+                dataType: "text",
+                data: data
+            }).done(function (msg) {
+                //alert(msg);
+                window.location.reload()
+            });
+        }
+    </script>
+
+}

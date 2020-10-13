@@ -1,0 +1,140 @@
+﻿@model Lagsoba94.Areas.Vote.Models.ViewModel.VoterVM
+
+@{
+    ViewBag.Title = "Create Voter";
+}
+
+<style>
+    .error {
+        border: 1px solid red;
+    }
+
+    .show {
+        display: inherit !important;
+    }
+</style>
+
+<h2>Create Voter</h2>
+<div>
+    <div>
+        <button type="button" class="btn btn-dark" id="btnUpload">Upload Voters</button>
+
+        <span>
+            <a target="_blank" href="~/voter/DownloadTemplate" class="btn btn-warning">
+                Download Template<i class="fas fa-download ml-2"></i>
+            </a>
+        </span>
+    </div>
+    <input class="" type="file" name="importFile" id="importFile" hidden />
+    <span style="display:none;" class="text-danger" id="errorText">Please select a valid file first (.xls, .xlxs, .csv)</span>
+    <span style="display:none;" class="text-danger" id="invalidFile">Invalid file type selected, only .xls and .xlxs, <br />.csv files are allowed. Download template please</span>
+    <span style="display:none;" class="text-info" id="loadingText">Uploading file...</span>
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.ValidationMessage("duplicate", htmlAttributes: new { @class = "text-danger" })
+
+        @if (TempData["SM"] != null)
+        {
+            <p class="alert alert-success">@TempData["SM"]</p>
+        }
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        
+        <div class="form-group">
+            @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-print" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("All Voters", "Index")
+</div>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            // upload voters
+            $('#btnUpload').click(function () {
+                $('#errorText').removeClass('show')
+                $('#invalidFile').removeClass('show')
+                $("#importFile").click()
+            })
+
+            // read file uploaded and submit to server
+            $('#importFile').on('change', function () {
+                // show loading text
+                $('#loadingText').addClass('show')
+
+                // make sure a file is selected
+                if (document.getElementById('importFile').files.length == 0) {
+                    $('#errorText').addClass('show')
+                    return
+                }
+
+                var files = $("#importFile").get(0).files;
+
+                var formData = new FormData();
+                formData.append('importFile', files[0]);
+
+                $.ajax({
+                    url: '/Voter/UploadVoters',
+                    data: formData,
+                    type: 'POST',
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        if (data.Status === 1) {
+                            alert(data.Message);
+                        } else if (data.Status === -1) {
+                            $('#invalidFile').addClass('show')
+                        } else {
+                            alert("Failed to Import");
+                        }
+
+                        $('#errorText').removeClass('show')
+                        $('#loadingText').removeClass('show')
+                    }
+                });
+            })
+        })
+    </script>
+}  

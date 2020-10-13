@@ -1,0 +1,287 @@
+﻿@model IEnumerable<Lagsoba94.Areas.Vote.Models.ViewModel.PositionVM>
+
+@{
+    ViewBag.Title = "Dashboard Overview";
+}
+<style>
+    .page-link {
+        /*width: 75px;*/
+        text-align: center;
+    }
+
+    .card-vote-gradient {
+        background: linear-gradient(to bottom, #1975e5, #1a4891);
+    }
+
+    .position .position-row {
+        padding-right: 0px !important;
+        padding-left: 0px !important;
+    }
+
+    .position-row .nav-link {
+        font-size: 0.89rem;
+        font-weight: 300;
+    }
+
+    .position .nav-pills .nav-link {
+        color: #fff;
+        border-radius: unset;
+    }
+
+        .position .nav-pills .nav-link.active {
+            color: #fff;
+            background-color: #1a4891;
+            font-weight: 600;
+            border-radius: unset;
+        }
+
+    .positionSide {
+    }
+</style>
+
+
+@*<div class="row" id="proBanner">
+        <div class="col-12">
+            <span class="d-flex align-items-center purchase-popup">
+                <h4>Dashboard Overview</h4>
+                <a href="!#" target="_blank" class="btn ml-auto download-button text-uppercase">Cast your votes below <i class="fas fa-arrow-down"></i></a>
+            </span>
+        </div>
+    </div>*@
+
+<div class="row position">
+    <div class="col-sm-4 position-row grid-margin stretch-card">
+        <div class="card card-vote-gradient">
+            <div class="card-body mb-4">
+                <h4 class="card-title text-white">Available Positions</h4>
+                @if (ViewBag.AllVoted == true)
+                {
+                    <div class="alert alert-info m-2">
+                        <p>You have voted for all positions</p>
+                    </div>
+                }
+
+                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    @foreach (var position in Model)
+                    {
+                        if (ViewBag.ActivePosition == position.Name.Replace('.', ' '))
+                        {
+                            <a class="nav-link vote-position active" href="#@position.Name" onclick="loadCandidates('@position.Id/@position.Name.Replace('.',' ')')">@position.Name</a>
+                        }
+                        else
+                        {
+                            <a class="nav-link vote-position" href="#@position.Name" onclick="loadCandidates('@position.Id/@position.Name.Replace('.',' ')')">@position.Name</a>
+                        }
+                    }
+
+                    <a class="nav-link vote-position bg-danger" href="#" onclick="loadResults()">MY VOTE SUMMARY</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-8 position-row positionSide grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div id="statusDiv">
+                    @if (TempData["SCC"] != null)
+                    {
+                        <div class="alert alert-success">@TempData["SCC"]</div>
+                    }
+
+                    @if (TempData["ERR"] != null)
+                    {
+                        <div class="alert alert-danger">@TempData["ERR"]</div>
+                    }
+                </div>
+
+                <div id="voteForPosition">
+
+                </div>
+
+                <div id="loading" class="text-center">
+                    <img id="loading-image" src="~/Content/assets/img/loader.gif" alt="Loading..." />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section Scripts {
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script>
+
+        $(document).ready(function() {
+            $(".vote-position").click(function () {
+                if(!$(this).hasClass('active'))
+                {
+                    $(".vote-position.active").removeClass("active");
+                    $(this).addClass("active");        
+                }   
+            });
+        });
+
+        window.onload = function () {
+            // compute url
+            var activePosition = '@ViewBag.ActivePosition'
+
+            var pSpace = activePosition.split(' ').join('%20')
+            var pFull = pSpace.replace(/\./g, '%2E');
+            //var pFull = pSpace.split('.').join('%2E')
+
+            $.ajax({
+                type: "GET",
+                url: "/vote/home/vote-for/" + '@ViewBag.PositionId/' + pFull,
+                cache: false,
+                success: function (result) {
+                    var p = document.getElementById('voteForPosition')
+                    p.innerHTML = result
+
+                    // hide loader
+                    $('#loading').hide('fast')
+                },
+                failure: function () {
+                    alert("An error occured, please try again.")
+                }
+            })
+        }
+
+        function loadCandidates(id) {
+            // show loader
+            $('#loading').show('fast')
+
+            // compute url
+            var pSpace = id.split('.').join('%2E')
+            var pFull = pSpace.split(' ').join('%20')
+            //var pFull = pSpace.replace(/\./g, '%2E');
+            //var pFull = pSpace.split('.').join('%2E')
+
+           $.ajax({
+                type: "GET",
+                url: "/vote/home/vote-for/" + pFull,
+                cache: false,
+                success: function (result) {
+                    var p = document.getElementById('voteForPosition')
+                    p.innerHTML = result
+
+                    // hide loader
+                    $('#loading').hide('fast')
+                },
+                failure: function () {
+                    alert("An error occured, please try again.")
+                }
+            })
+        }
+
+        function castVote(candidateId) {
+            $('#statusDiv').hide('slow')
+            $('#loading').show('fast')
+
+            $.ajax({
+                type: "POST",
+                url: "/vote/home/cast-vote",
+                cache: false,
+                data: { "candidateId": candidateId },
+                success: function (result) {
+                    // take care of error
+                    if (result.Status === 0) {
+                        window.location.href = result.Url
+                    } else if (result.Status === 1) {
+                        //$('#voteForPosition').replaceWith(result.Message)
+                        location.reload()
+                    } else {
+                        alert('Vote Casting Failed')
+                        $('#loading').hide('fast')
+                    }
+                },
+                failure: function () {
+                    alert("An error occured, please try again.")
+                     $('#loading').hide('fast')
+                }
+            })
+        }
+
+        function skipVote(positionName) {
+            // get confirmed
+             var proceed = confirm("You will not be able to vote for this position again.\nIf you want to skip instead, just click on any of the position you\nwish to vote for in the left side.\nDo you still want to CAST NO VOTE?")
+
+            if (proceed == true) {
+                $('#loading').show('fast')
+                $.ajax({
+                    type: "POST",
+                    url: "/vote/home/NoVote",
+                    cache: false,
+                    data: { "positionName": positionName },
+                    success: function (result) {
+                        // take care of error
+                        if (result.Status === 0) {
+                         alert("An error occured, please try again.")
+                            $('#loading').hide('fast')
+                        } else if (result.Status === 1) {
+                            location.reload()
+                        } else {
+                           alert("An error occured, please try again.")
+                           $('#loading').hide('fast')
+                        }
+                    },
+                    failure: function () {
+                        alert("An error occured, please try again.")
+                        $('#loading').hide('fast')
+                    }
+                })
+            } else {
+                return;
+            }
+        }
+
+        function sendMeACopy() {
+            $('#loading').show('fast')
+                $.ajax({
+                    type: "GET",
+                    url: "/vote/home/send-me-a-copy",
+                    cache: false,
+                    success: function (result) {
+                        // take care of error
+                        if (result.Status === 0) {
+                         alert("An error occured, please try again.")
+                            $('#loading').hide('fast')
+                        } else if (result.Status === 1) {
+                            alert(result.Message)
+                            $('#loading').hide('fast')
+                        } else {
+                           alert("An error occured, please try again.")
+                           $('#loading').hide('fast')
+                        }
+                    },
+                    failure: function () {
+                        alert("An error occured, please try again.")
+                        $('#loading').hide('fast')
+                    }
+                })
+        }
+
+        function loadResults() {
+            // show loader
+            $('#loading').show('fast')
+
+           $.ajax({
+                type: "GET",
+                url: "/vote/home/vote-for/0/Finished",
+                cache: false,
+                success: function (result) {
+                    var p = document.getElementById('voteForPosition')
+                    p.innerHTML = result
+
+                    // hide loader
+                    $('#loading').hide('fast')
+                },
+                failure: function () {
+                    alert("An error occured, please try again.")
+                }
+            })
+        }
+    </script>
+}

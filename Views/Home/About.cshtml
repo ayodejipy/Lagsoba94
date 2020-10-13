@@ -1,0 +1,144 @@
+﻿@model Lagsoba94.Models.ViewModels.AboutVM
+@{
+    ViewBag.Title = "About us";
+}
+
+<!-- Breadcrumb -->
+<section class="section-hero mb-3">
+    <div class="hero-wrapper p-4">
+        <div class="hero-bg--overlay"></div>
+        <div class="container h-100">
+            <div class="row h-100">
+                <div class="hero-content d-flex align-items-center justify-content-center">
+                    <div class="d-flex w-100 flex-column align-items-center justify-content-center">
+                        <h3 class="text-white text-center">
+                            Welcome to
+                            <br>
+                            <span style="font-style: normal; font-weight: 600;">Lagsoba'94</span>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ./ breadcrumb -->
+<!-- about Lagsoba'94 -->
+<section class="section-about my-5">
+    <div class="container about-Lagsoba'94">
+        <div class="row">
+            <div class="col-12 col-md-6">
+                <div class="h-100 p-4">
+                    <div class="text-left p-0">
+                        <h2> Our Story </h2>
+                        <div class="pb-4">
+                            @Html.Raw(System.Web.HttpUtility.HtmlDecode(@Model.Story_First))
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6">
+                <div class="row mt-4 mt-md-0">
+                    <div class="col-5 offset-1 px-2 mb-3 align-self-end">
+                        <img class="border-radius-3 wow fadeInUp" data-wow-duration="0.8s" data-wow-delay="0.4s"
+                             src="~/Content/assets/img/gallery/8.jpeg" alt=""
+                             style="visibility: visible; animation-duration: 0.8s; animation-delay: 0.4s; animation-name: fadeInUp;">
+                    </div>
+                    <div class="col-6 px-2 mb-3">
+                        <img class="border-radius-3 wow fadeInRight" data-wow-duration="0.8s" data-wow-delay="0.6s"
+                             src="~/Content/assets/img/gallery/27.jpeg" alt=""
+                             style="visibility: visible; animation-duration: 0.8s; animation-delay: 0.6s; animation-name: fadeInRight;">
+                    </div>
+                    <div class="col-7 px-2 mb-3">
+                        <div class="border-radius-3 wow fadeInLeft bg-grad p-2 p-sm-3 p-lg-4 p-xl-5 all-text-white"
+                             data-wow-duration="0.8s" data-wow-delay="0s"
+                             style="visibility: visible; animation-duration: 0.8s; animation-delay: 0s; animation-name: fadeInLeft;">
+                            <span class="text-uppercase">Our Motto:</span>
+                            <h5 class="font-weight-bold">
+                                “SEMPER OPTIMUM” <br>
+                                (“ALWAYS THE BEST”)
+                            </h5>
+                        </div>
+                    </div>
+                    <div class="col-5 align-self-start pl-2 mb-3">
+                        <img class="border-radius-3 wow fadeInDown" data-wow-duration="0.8s" data-wow-delay="0.2s"
+                             src="~/Content/assets/img/gallery/35.jpeg" alt=""
+                             style="visibility: visible; animation-duration: 0.8s; animation-delay: 0.2s; animation-name: fadeInDown;">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row col-15">
+            <div class="my-2 p-4">
+                @Html.Raw(System.Web.HttpUtility.HtmlDecode(@Model.Story_Second))
+            </div>
+        </div>
+    </div>
+</section>
+<!-- /.about Lagsoba'94 -->
+<!-- mission Lagsoba'94 -->
+<section class="section-mission p-0">
+    <div>
+        <div class="row no-gutters">
+            <!--our mission image left-->
+            <div class="col-lg-6 d-none d-lg-block bg-light"
+                 style="background:url(/Content/assets/img/gallery/31.jpeg) no-repeat; background-size:cover;">
+            </div>
+            <!--our mission text right-->
+            <div class="col-lg-6 col-md-12 px-4 py-5">
+                <div class="h-100">
+                    <div class="mission text-left">
+                        <h2 class="uppercase"> Aim and<br> Objective </h2>
+                        <div class="pr-4">
+                            @Html.Raw(System.Web.HttpUtility.HtmlDecode(@Model.AimsAndObjectives))
+                        </div>
+                        <button class="btn btn-ctp shadow lift font-weight-bold mt-4">
+                            See Our Executives
+                            <i class="fa fa-angle-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- /.mission Lagsoba'94 -->
+<!-- Lagsoba'94 aim & objective -->
+<section class="section-aimo my-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-12 px-4 py-5">
+                <div class="h-100">
+                    <div class="mission text-left">
+                        <h2 class="uppercase"> Our <br> Mission </h2>
+                        <div class="pr-4">
+                            @Html.Raw(System.Web.HttpUtility.HtmlDecode(@Model.Mission))
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12 px-4 py-5">
+                <div class="h-100">
+                    <div class="mission text-left">
+                        <h2 class="uppercase"> Our <br> Vision </h2>
+                        <div class="pr-4">
+                            @Html.Raw(System.Web.HttpUtility.HtmlDecode(@Model.Vision))
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="h-100">
+                    <div class="mission text-left">
+                        <h2 class="text-center"> Our Achievement </h2>
+                        <div class="pr-4">
+                            @Html.Raw(System.Web.HttpUtility.HtmlDecode(@Model.Achievements))
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ./Lagsoba'94 aim & objective -->

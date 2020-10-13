@@ -1,0 +1,21 @@
+﻿<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Activity
+    </a>
+
+    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        @Html.ActionLink("News", "index", "blog", null, new { @class = "dropdown-item" })
+        @*@Html.ActionLink("Events", "events", "home", null, new { @class = "dropdown-item" })*@
+        @Html.ActionLink("Gallery", "gallery", "home", null, new { @class = "dropdown-item" })
+
+        @if (ViewBag.VoteActive != null && ViewBag.VoteActive)
+        {
+            if(User.IsInRole("Voter"))
+            {
+                <a class="dropdown-item" href="~/Vote/Home" target="_blank">Vote Now!</a>
+            }
+        }
+    </div>
+
+</li>

@@ -1,0 +1,249 @@
+﻿@model IEnumerable<Lagsoba94.Models.UsersList>
+@{
+    ViewBag.Title = "Users for Voting";
+}
+
+
+<!-- Breadcrumb -->
+<section class="section-contact mb-3">
+    <div class="page-breadcrumb p-4">
+        <div class="hero-bg--overlay"></div>
+        <div class="container h-100">
+            <div class="row h-100">
+                <div class="hero-content d-flex align-items-center justify-content-center">
+                    <div class="d-flex w-100 flex-column align-items-center justify-content-center">
+                        <h3 class="text-white text-center">
+                            @ViewBag.Title
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ./ breadcrumb -->
+
+<div class="container pt-25">
+
+    <!-- Row -->
+    <div class="row my-3 manage-vote-users">
+        <div class="col-lg-12 col-xs-12">
+            <div class="heading my-3">
+                <h3 class="page-title">Manage Voters</h3>
+                <p class="lead mb-3 page-subtitle">List of voters, assign role to specific voter.</p>
+            </div>
+
+            <div class="my-5">
+                <table class="table user-table" id="dataTable" width="100%" cellspacing="0">
+                    <thead style="background: #4a8efa; color: #fff">
+                        <tr>
+                            <th>#</th>
+                            <th>Full Name</th>
+                            <th>Phone</th>
+                            <th>Email Address</th>
+                            <th>
+                                Assign Role
+                                <img src="/Content/assets/img/loader.gif" id="roleLoader" style="width: auto;height: 20px;float: right;display:none;">
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td>@user.Count</td>
+                                <td class="text-primary font-weight-bold"><a href="~/profile/user-profile?memberName=@user.FullName&userId=@user.UserId">@user.FullName</a></td>
+                                <td>@user.Phone</td>
+                                <td>@user.Email</td>
+                                <td>
+                                    @if (user.RoleNames.Contains("Voter"))
+                                    {
+                                        <a href="#" class="btn btn-danger remove-voter my-1" onclick="removeVoter(@user.UserId)">Remove as Voter</a>
+                                    }
+                                    else
+                                    {
+                                        <a href="#" class="btn btn-primary make-voter my-1" onclick="makeVoter(@user.UserId)">Make Voter</a>
+                                    }
+
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        if (user.RoleNames.Contains("Electoral Admin"))
+                                        {
+                                            <a href="#" class="btn btn-danger remove-elec-admin my-1" onclick="removeElectAdmin(@user.UserId)">Remove as Electoral Admin</a>
+                                        }
+                                        else
+                                        {
+                                            <a href="#" class="btn btn-primary make-elec-admin my-1" onclick="makeElectAdmin(@user.UserId)">Make Electoral Admin</a>
+                                        }
+
+
+
+                                        if (user.RoleNames.Contains("Electoral Supervisor"))
+                                        {
+                                            <a href="#" class="btn btn-danger remove-elec-super my-1" onclick="removeElectSuper(@user.UserId)">Remove as Electoral Sprv.</a>
+                                        }
+                                        else
+                                        {
+                                            <a href="#" class="btn btn-primary make-elec-super my-1" onclick="makeElectSuper(@user.UserId)">Make Electoral Sprv.</a>
+                                        }
+                                    }
+                                    else if (User.IsInRole("Electoral Admin"))
+                                    {
+
+
+                                        if (user.RoleNames.Contains("Electoral Supervisor"))
+                                        {
+                                            <a href="#" class="btn btn-danger remove-elec-super my-1" onclick="removeElectSuper(@user.UserId)">Remove as Electoral Sprv.</a>
+                                        }
+                                        else
+                                        {
+                                            <a href="#" class="btn btn-primary make-elec-super my-1" onclick="makeElectSuper(@user.UserId)">Make Electoral Sprv.</a>
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- /Row -->
+</div>
+
+@section Scripts{
+    <script>
+        (function () {
+            $('.nice-select').remove();
+
+            $(document).ready(function () {
+                $('#dataTable').DataTable({
+                    "language": {
+                        "paginate": {
+                            "next": '<i class="fas fa-angle-right"></i>',
+                            "previous": '<i class="fas fa-angle-left"></i>'
+                        }
+                    }
+                });
+            });
+        })()
+
+        // add user to voter role
+        function makeVoter(userId) {
+            $('#roleLoader').show('slow')
+
+
+            var data = { "userId": userId }
+            $.ajax({
+                type: "GET",
+                url: "/profile/MakeVoter/",
+                cache: false,
+                dataType: "text",
+                data: data
+            }).done(function (msg) {
+                //alert(msg);
+                window.location.reload()
+            });
+        }
+
+        // remove user from voter role
+        function removeVoter(userId) {
+            $('#roleLoader').show('slow')
+
+            var data = { "userId": userId }
+            $.ajax({
+                type: "GET",
+                url: "/profile/RemoveVoter/",
+                cache: false,
+                dataType: "text",
+                data: data
+            }).done(function (msg) {
+                //alert(msg);
+                window.location.reload()
+            });
+        }
+
+
+        // add user to electoral admin role
+        function makeElectAdmin(userId) {
+            $('#roleLoader').show('slow')
+
+            var data = { "userId": userId }
+            $.ajax({
+                type: "POST",
+                url: "/profile/MakeElectAdmin/",
+                cache: false,
+                dataType: "text",
+                data: data,
+                success: function (msg) {
+                    var result = JSON.parse(msg)
+                    if (result.Status === 0) {
+                        alert(result.Message)
+                        $('#roleLoader').hide('slow')
+                    } else {
+                        window.location.reload()
+                    }
+                }
+            })
+        }
+
+        // remove user from electoral admin role
+        function removeElectAdmin(userId) {
+            $('#roleLoader').show('slow')
+
+            var data = { "userId": userId }
+            $.ajax({
+                type: "GET",
+                url: "/profile/RemoveElectAdmin/",
+                cache: false,
+                dataType: "text",
+                data: data
+            }).done(function (msg) {
+                window.location.reload()
+            });
+        }
+
+        // add user to electoral supervisor role
+        function makeElectSuper(userId) {
+            $('#roleLoader').show('slow')
+
+            var data = { "userId": userId, }
+            $.ajax({
+                type: "POST",
+                url: "/profile/MakeElectSuper/",
+                cache: false,
+                dataType: "text",
+                data: data,
+                success: function (msg) {
+                    var result = JSON.parse(msg)
+                    if (result.Status === 0) {
+                        alert(result.Message)
+                        $('#roleLoader').hide('slow')
+                    } else {
+                        window.location.reload()
+                    }
+                }
+            })
+        }
+
+        // remove user from electoral supervisor role
+        function removeElectSuper(userId) {
+            $('#roleLoader').show('slow')
+
+            var data = { "userId": userId }
+            $.ajax({
+                type: "GET",
+                url: "/profile/RemoveElectSuper/",
+                cache: false,
+                dataType: "text",
+                data: data
+            }).done(function (msg) {
+                //alert(msg);
+                window.location.reload()
+            });
+        }
+    </script>
+
+
+}

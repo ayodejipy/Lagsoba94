@@ -1,0 +1,14 @@
+﻿@model Lagsoba94.Areas.Vote.Models.ViewModel.LoginPartialVM
+
+<div class="my-2">
+    @if (User.IsInRole("Electoral Admin") || User.IsInRole("Electoral Supervisor") )
+    {
+        <a href="~/vote/home/vote-results" class="btn btn-management mr-2">
+            Management
+        </a>
+    }
+
+    <a href="~/vote/home/logout" class="logout-default">
+        <i class="fas fa-sign-out-alt mr-"></i> Logout
+    </a>
+</div>

@@ -1,0 +1,87 @@
+﻿@model Lagsoba94.Areas.Vote.Models.ViewModel.ElectionVM
+
+
+@Html.AntiForgeryToken()
+
+
+<form id="electionDateForm">
+    @Html.ValidationMessage("error", htmlAttributes: new { @class = "text-danger" })
+    @if (ViewBag.Errors != null)
+    {
+        <p class="alert alert-danger">@ViewBag.Errors</p>
+    }
+    <p class="alert alert-success" style="display:none;" id="successP">Election dates updated.</p>
+    <p class="alert alert-danger fade show" style="display: none;" id="errorP"></p>
+
+    <p id="startDateP">Election Starts on: @ViewBag.StartDate</p>
+    <p id="endDateP">Election Ends on: @ViewBag.EndDate</p>
+
+    <div class="form-group row">
+        <div class="col-md-6">
+            <label>Start Date</label>
+            <input class="form-control text-box single-line" data-val="true" data-val-date="The field End Date must be a date." data-val-required="The End Date field is required." id="StartDate" name="StartDate" type="date" min="@ViewBag.Limit">
+            @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="col-md-6">
+            <label>End Date</label>
+            <input class="form-control text-box single-line" data-val="true" data-val-date="The field End Date must be a date." data-val-required="The End Date field is required." id="EndDate" name="EndDate" type="date" min="@ViewBag.Limit">
+            @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+</form>
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script>
+    var FormatDate = function (dt) {
+        mlist = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+        return dt.getDate() + ' ' + mlist[dt.getMonth()] + ', ' + dt.getFullYear()
+    };
+
+    function changeDate() {
+        $('#errorP').hide('slow')
+        $('#successP').hide('slow');
+
+        var startDate = $("#StartDate").val();
+        if (startDate == "") {
+            $('#errorP').html('Please select a start date')
+            $('#errorP').show('slow');
+            return;
+        }
+
+        var selectedDate = $("#EndDate").val();
+        if (selectedDate == "") {
+            $('#errorP').html('Please select an end date')
+            $('#errorP').show('slow');
+            return;
+        }
+
+        $('#loaderSpan').show('slow')
+        data = $('#electionDateForm').serialize();
+
+        $.ajax({
+            type: "POST",
+            url: "/profile/_electiondatepartial",
+            cache: false,
+            data: data,
+            success: function (result) {
+                if (result.Status === 0) {
+                    $('#errorP').html(result.Message + closeBtn)
+                    $('#errorP').show('slow');
+                    $('#loaderSpan').hide('slow')
+                } else if (result.Status === 1) {
+                    $('#successP').show('slow');
+                    $('#loaderSpan').hide('slow')
+
+                    // redisplay the dates
+                    $('#startDateP').html('Election Starts on: ' + FormatDate(new Date($('#StartDate').val())))
+                    $('#endDateP').html('Election Ends on: ' + FormatDate(new Date($('#EndDate').val())))
+                }
+            },
+            failure: function () {
+                alert("An error occured, please try again.")
+            }
+        })
+    }
+</script>

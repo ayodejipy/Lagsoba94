@@ -1,0 +1,564 @@
+﻿@model Lagsoba94.Models.MembershipRequestVM
+
+@{
+    ViewBag.Title = "Register";
+}
+
+@*Croppie for cropping images*@
+<link href="~/Content/croppie.css" rel="stylesheet" />
+
+@*style for choosing profile image*@
+<link href="~/Content/assets/css/ProfileImage.css" rel="stylesheet" />
+
+<!-- register Lagsoba'94 -->
+<section class="section-register shadow">
+    <div>
+        <div class="row no-gutters">
+            <!--why us left-->
+            <div class="col-lg-6 d-none d-lg-block bg-light"
+                 style="background:url(/Content/assets/img/gallery/36.jpeg) no-repeat; background-size:cover;">
+            </div>
+
+            <!--why us right-->
+            <div class="col-lg-6 col-md-12 px-4 py-5 ">
+                <div class="h-100">
+                    <div class="register-form">
+                        <h2 class="mb-4 text-uppercase text-center"> Welcome to Lagsoba'94.</h2>
+                        <div class="multisteps-form">
+                            <!--progress bar-->
+                            <div class="row">
+
+
+                                <div class="col-12 col-lg-8 ml-auto mr-auto mb-4">
+                                    <div class="multisteps-form__progress">
+                                        <button class="multisteps-form__progress-btn js-active" type="button" title="User Info">User Information</button>
+                                        <button class="multisteps-form__progress-btn" type="button" title="Address">Upload Photo</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--form panels-->
+                            <div class="row">
+                                <div class="col-12 col-lg-12">
+                                    <form action="/Account/Register" method="post" novalidate="novalidate" class="form multisteps-form__form">
+                                        @Html.AntiForgeryToken()
+                                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                        <!--single form panel-->
+                                        <div class="multisteps-form__panel p-4 rounded bg-white js-active" data-animation="scaleIn">
+                                            <h3 class="multisteps-form__title">Personal Information</h3>
+                                            <div class="multisteps-form__content">
+
+                                                <div class="form-row mt-4">
+                                                    <div class="col-12 col-sm-6">
+                                                        <label for="Title">Title <span style="color: red;">*</span></label>
+
+                                                        @Html.DropDownListFor(m => m.Title, new List<SelectListItem>
+                                                        {
+                                                               new SelectListItem { Text="Mr", Value="Mr", Selected=true},
+                                                               new SelectListItem { Text = "Doctor", Value = "Doctor" },
+                                                               new SelectListItem { Text = "Engineer", Value = "Engineer" },
+                                                               new SelectListItem { Text = "Architect", Value = "Architect" },
+                                                        }, new { @class = "multisteps-form__input form-control show" })
+                                                        @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                                                    </div>
+
+                                                    <div class="col-12 col-sm-6">
+                                                        <label for="FirstName">First Name <span style="color: red;">*</span></label>
+                                                        @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "multisteps-form__input form-control" } })
+                                                        @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-row mt-4">
+                                                    <div class="col-12 col-sm-6 mt-4 mt-sm-0">
+                                                        <label for="LastName">Last Name <span style="color: red;">*</span></label>
+                                                        @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "multisteps-form__input form-control" } })
+                                                        @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                                                    </div>
+
+                                                    <div class="col-12 col-sm-6 mt-4 mt-sm-0">
+                                                        <label for="OtherNames">Other Names</label>
+                                                        @Html.EditorFor(model => model.OtherNames, new { htmlAttributes = new { @class = "multisteps-form__input form-control" } })
+                                                        @Html.ValidationMessageFor(model => model.OtherNames, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-row mt-4">
+                                                    <div class="col-12 col-sm-6">
+                                                        <label for="Gender">Gender <span style="color: red;">*</span></label>
+                                                        @Html.DropDownListFor(m => m.Gender, new List<SelectListItem>
+                                                            {
+                                                                   new SelectListItem { Text="Male", Value="Male", Selected=true},
+                                                                   new SelectListItem { Text = "Female", Value = "Female" }
+                                                            }, new { @class = "multisteps-form__input form-control show" })
+                                                        @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
+                                                    </div>
+
+                                                    <div class="col-12 col-sm-6">
+                                                        <label for="DOB">Birth Date <span style="color: red;">*</span></label>
+
+                                                        <input class="form-control text-box single-line" data-val="true" data-val-date="The field Date of Birth must be a date." data-val-required="The Date of Birth field is required." id="DOB" name="DOB" type="date" value="">
+
+                                                        @Html.ValidationMessageFor(model => model.DOB, "", new { @class = "text-danger" })
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="form-row mt-4">
+                                                    <div class="col-12 mt-4 mt-sm-0">
+                                                        <label for="Email">Email Address <span style="color: red;">*</span></label>
+                                                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "multisteps-form__input form-control" } })
+                                                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-row mt-4">
+                                                    <div class="col-12">
+                                                        <label for="Phone">Phone Number <span style="color: red;">*</span></label>
+
+                                                        <div class="input-group mb-3 ">
+                                                            <div class="w-50 input-group-prepend ">
+                                                                <select class="w-100 input-group-text show" data-val="true" data-val-required="Please select a country for your phone from the dropdown" id="CountryCodeSelected" name="CountryCodeSelected">
+                                                                    <option selected>-- Country Code --</option>
+                                                                </select>
+                                                            </div>
+                                                            <input class="w-1 multisteps-form__input form-control text-box single-line" data-val="true" data-val-required="Your phone number is required" id="PhoneNumberRaw" name="PhoneNumberRaw" type="text" disabled value="">
+
+                                                        </div>
+
+                                                        @Html.ValidationMessageFor(model => model.PhoneNumberRaw, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-row mt-4">
+                                                    <div class="col-12">
+                                                        <label for="Address">Address <span style="color: red;">*</span></label>
+                                                        @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "multisteps-form__input form-control" } })
+                                                        @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-row mt-4">
+                                                    <div class="col-12 mt-4 mt-sm-0">
+                                                        <label for="State">Country & State <span style="color: red;">*</span></label>
+                                                        <div class="input-group mb-3 ">
+                                                            <div class="w-50 input-group-prepend ">
+                                                                <select class="w-100 input-group-text show" id="Country" name="Country">
+                                                                    <option selected> -- Select Country --</option>
+                                                                </select>
+                                                            </div>
+                                                            <select class="w-1 multisteps-form__input form-control show" id="State" name="State" disabled>
+                                                                <option selected> -- Select State --</option>
+                                                            </select>
+                                                        </div>
+
+                                                        @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
+                                                        @Html.ValidationMessageFor(model => model.Country, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-row mt-4">
+                                                    <div class="col-12 col-sm-6">
+                                                        <label for="City">City <span style="color: red;">*</span></label>
+                                                        @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "multisteps-form__input form-control" } })
+                                                        @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+                                                    </div>
+
+                                                    <div class="col-12 col-sm-6">
+                                                        <label for="Zip">Zip</label>
+                                                        @Html.EditorFor(model => model.Zip, new { htmlAttributes = new { @class = "multisteps-form__input form-control" } })
+                                                        @Html.ValidationMessageFor(model => model.Zip, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-row mt-4">
+                                                    <div class="col-12">
+                                                        <label for="Profession">Profession <span style="color: red;">*</span></label>
+                                                        @Html.EditorFor(model => model.Profession, new { htmlAttributes = new { @class = "multisteps-form__input form-control" } })
+                                                        @Html.ValidationMessageFor(model => model.Profession, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-row mt-4">
+                                                    <div class="col-12 col-sm-6">
+                                                        <label for="FirstYear">Class group in your first year? <span style="color: red;">*</span></label>
+                                                        @Html.EditorFor(model => model.FirstYear, new { htmlAttributes = new { @class = "multisteps-form__input form-control" } })
+                                                        @Html.ValidationMessageFor(model => model.FirstYear, "", new { @class = "text-danger" })
+                                                    </div>
+
+                                                    <div class="col-12 col-sm-6">
+                                                        <label for="FinalYear">Class group in your final year? <span style="color: red;">*</span></label>
+                                                        @Html.EditorFor(model => model.FinalYear, new { htmlAttributes = new { @class = "multisteps-form__input form-control" } })
+                                                        @Html.ValidationMessageFor(model => model.FinalYear, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-row mt-4">
+                                                    <div class="col-12">
+                                                        <label for="NickName">What was your nickname in school? <span style="color: red;">*</span></label>
+                                                        @Html.EditorFor(model => model.NickName, new { htmlAttributes = new { @class = "multisteps-form__input form-control" } })
+                                                        @Html.ValidationMessageFor(model => model.NickName, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-row mt-4">
+                                                    <div class="col-12 col-sm-12">
+                                                        <label for="Profile">Profile </label>
+                                                        <textarea class="multisteps-form__input form-control" cols="20" id="Profile" name="Profile" rows="5">
+                                                        </textarea>
+                                                        <em class="text-info">(2000 characters maximum)</em>
+                                                        @Html.ValidationMessageFor(model => model.Profile, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                                <div class="button-row d-flex mt-4">
+                                                    <button class="btn btn-primary ml-auto js-btn-next" type="button" title="Next">Next</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!--single form panel-->
+                                        <div class="multisteps-form__panel p-4 rounded bg-white" data-animation="scaleIn">
+                                            <h3 class="multisteps-form__title">Upload Photo</h3>
+                                            <div class="multisteps-form__content">
+                                                <div class="form-row mt-4">
+                                                    <div class="col">
+
+                                                        @Html.HiddenFor(model => model.ImageString)
+
+                                                        <div class="upload-demo">
+                                                            <input type="file" id="upload" value="Choose a file" accept="image/*" data-role="none" />
+                                                            <div class="col-1-2" style="margin: 0 auto;display:table;">
+                                                                <div class="upload-msg">
+                                                                    Click to upload a profile image.'
+                                                                </div>
+
+                                                                <div id="upload-demo"></div>
+
+                                                                <em class="text-info mb-3 text-center">(Scale image to your prefrrence before submitting)</em>
+
+                                                                <span id="imgError" style="display:none;" class="text-danger"><em>Image selected is too large, max file size is 2MB</em></span>
+
+                                                                <div class="buttons" style="margin:0 auto;display:table;">
+                                                                    @*<button id="" class="upload-result">Use This Image <i class="fa fa-check"></i></button>*@
+                                                                    <button class="btn btn-info change-image" style="margin-left:5px;">Select Another Image</button>
+                                                                    <button class="btn btn-danger reset" style="margin-left:5px;">Remove Image</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="button-row d-flex mt-4">
+                                                    <button class="btn btn-primary js-btn-prev" type="button" title="Prev">Prev</button>
+                                                    <button class="btn btn-cta-2 ml-auto js-btn-prev" id="submitBtn" type="button" title="Next">Register</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- /.register Lagsoba'94 -->
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+
+    @*Javascript plugin for croppie*@
+    <script src="~/Scripts/croppie.js"></script>
+
+    <script>
+        var submitImage
+
+        $(document).ready(function () {
+            // activates the gender select list and set date limits
+            (function () {
+                $('.nice-select').remove();
+
+                var today = new Date();
+                var limitDay = new Date();
+                limitDay.setFullYear(today.getFullYear() - 39);
+
+                var ne = formatDate(limitDay);
+                document.getElementById("DOB").setAttribute("max", ne);
+
+
+                // POPULATE COUNTRY LIST
+                // CREATE AN XMLHttpRequest OBJECT, WITH GET METHOD.
+                var xhr = new XMLHttpRequest(),
+                    method = 'GET',
+                    overrideMimeType = 'application/json',
+                    url = '/content/assets/countrycodes.json';
+
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+
+                        // PARSE JSON DATA.
+                        var country = JSON.parse(xhr.responseText);
+
+                        var ele = document.getElementById('CountryCodeSelected');
+                        for (var i = 0; i < country.data.length; i++) {
+
+                            // BIND DATA TO <select> ELEMENT.
+                            ele.innerHTML = ele.innerHTML +
+                                '<option value="' + country.data[i].code + '">' + country.data[i].name + " (" + country.data[i].dial_code + ')</option>';
+                        }
+                    }
+                };
+                xhr.open(method, url, true);
+                xhr.send();
+
+
+
+                // populate country for address list
+                var countryStates = new XMLHttpRequest(),
+                    stateMethod = 'GET',
+                    stateOverrideMimeType = 'application/json',
+                    stateUrl = '/content/assets/countrieswithstates.json';
+
+                countryStates.onreadystatechange = function () {
+                    if (countryStates.readyState === XMLHttpRequest.DONE && countryStates.status === 200) {
+
+                        // PARSE JSON DATA.
+                        var stateCountries = JSON.parse(countryStates.responseText);
+
+                        var countryElement = document.getElementById('Country');
+                        for (var i = 0; i < stateCountries.data.length; i++) {
+
+                            // BIND DATA TO <select> ELEMENT.
+                            countryElement.innerHTML = countryElement.innerHTML +
+                                '<option value="' + stateCountries.data[i].name + '">' + stateCountries.data[i].name + '</option>';
+                        }
+                    }
+                };
+                countryStates.open(stateMethod, stateUrl, true);
+                countryStates.send();
+            })()
+
+            function formatDate(date) {
+                var d = new Date(date),
+                    month = '' + (d.getMonth() + 1),
+                    day = '' + d.getDate(),
+                    year = d.getFullYear();
+
+                if (month.length < 2)
+                    month = '0' + month;
+                if (day.length < 2)
+                    day = '0' + day;
+
+                return [year, month, day].join('-');
+            }
+
+            $('#CountryCodeSelected').on('change', function () {
+                var code = $(this).children("option:selected").val();
+
+                // check if selectedCountry is empty
+                if (code == "" || code == code || selectedCountry == "-- Select Country --") {
+                    $('#PhoneNumberRaw').prop('disabled', false);
+                } else {
+                    $('#PhoneNumberRaw').prop('disabled', 'disabled');
+                }
+            })
+
+            $('#Country').on('change', function () {
+                var selectedCountry = $(this).children("option:selected").val();
+
+                // check if selectedCountry is empty
+                if (selectedCountry == "" || selectedCountry == null || selectedCountry == "-- Country Code --") {
+                    $('#State').prop('disabled', 'disabled');
+                    return;
+                }
+
+                // perform an ajax get to get all corresponding states
+                $.ajax({
+                    type: "GET",
+                    url: "/account/country-states/",
+                    cache: false,
+                    data: { countryName: selectedCountry },
+                    success: function (result) {
+                        // clear state dropdown
+                        $('#State')
+                            .empty()
+                            .append('<option selected="selected"> -- Select State --</option>')
+
+                        // PARSE JSON DATA.
+                        var states = JSON.parse(result.data);
+
+                        var stateElement = document.getElementById('State');
+                        for (var i = 0; i < states.length; i++) {
+
+                            // BIND DATA TO <select> ELEMENT.
+                            stateElement.innerHTML = stateElement.innerHTML +
+                                '<option value="' + states[i].name + '">' + states[i].name + '</option>';
+                        }
+
+                        $('#State').prop('disabled', false);
+                    },
+                    failure: function () {
+                    }
+                })
+
+            })
+
+            var $uploadCrop
+            $(".upload-msg").click(function () {
+                $("#upload").click()
+            })
+
+            submitImage = (function () {
+                return function innerFunction() {
+                    // display loader
+                    $('#loader').show('slow')
+
+                    $uploadCrop.croppie('result', {
+                        type: 'base64',
+                        size: 'jpeg'
+                    }).then(function (resp) {
+                        $('#ImageString').attr('value', resp)
+                    })
+
+                    // hide loader
+                    $('#loader').hide('slow')
+                };
+            })();
+
+            function readFile(input) {
+                $uploadCrop = $("#upload-demo").croppie({
+                    viewport: {
+                        width: 263,
+                        height: 339,
+                        type: 'square'
+                    },
+                    boundary: {
+                        width: 300,
+                        height: 400
+                    },
+                    enforceBoundary: true,
+                    showZoomer: true
+                });
+
+                if (input.files && input.files[0]) {
+                    if (/^image/.test(input.files[0].type)) { // only image file
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            $uploadCrop.croppie('bind', {
+                                url: e.target.result
+                            });
+                            $('.upload-demo').addClass('ready');
+                        }
+                        reader.readAsDataURL(input.files[0]);
+                    } else {
+                        alert("You may only select image files");
+                    }
+                } else {
+                    alert("Sorry - your browser doesn't support FileReader API");
+                }
+            }
+
+            // read image upload file
+            $('#upload').on('change', function () {
+                $('#imgError').hide('slow')
+
+                readFile(this)
+
+                //const size = (this.files[0].size / 1024 / 1024).toFixed(2);
+
+                //if (size > 132) {
+                //    $('#imgError').show('slow')
+                //} else {
+                    
+                //}
+            })
+
+            $('#submitBtn').on('click', function () {
+                event.preventDefault()
+
+                if ($uploadCrop == null) {
+                     // submit form
+                    $('.form').submit()
+                }
+
+                $uploadCrop.croppie('result', {
+                    type: 'base64',
+                    size: 'viewport',
+                    format: 'jpeg',
+                    quality: 0.99
+                }).then(function (resp) {
+                    $('#ImageString').attr('value', resp)
+
+                    // submit form
+                    $('.form').submit()
+                })
+
+
+            })
+
+            $('.upload-result').on('click', function () {
+                event.preventDefault()
+
+                // display loader
+                $('#loader').show('slow')
+
+                $uploadCrop.croppie('result', {
+                    type: 'base64',
+                    size: 'jpeg'
+                }).then(function (resp) {
+                    $('#ImageString').attr('value', resp)
+                })
+
+                // hide loader
+                $('#loader').hide('slow')
+
+                $('.fa-check').addClass('show')
+            })
+
+            //this selects another image
+            $(".change-image").click(function () {
+
+                $('.upload-demo').removeClass('ready')
+                $('#upload-demo').removeClass()
+                $('.fa-check').removeClass('show');
+                $('#ImageString').attr('value', '')
+
+                // remove all div in the upload-demo element
+                let menu = document.getElementById('upload-demo');
+                while (menu.firstChild) {
+                    menu.removeChild(menu.firstChild);
+                }
+
+                $('#upload').val('') // this will clear the input val.
+                $uploadCrop = null;
+
+                // trigger the file browser
+                $("#upload").click()
+            })
+
+            //this reset the image selector
+            $(".reset").click(function () {
+
+                $('.upload-demo').removeClass('ready')
+                $('#upload-demo').removeClass()
+                $('.fa-check').removeClass('show');
+                $('#ImageString').attr('value', '')
+
+                // remove all div in the upload-demo element
+                let menu = document.getElementById('upload-demo');
+                while (menu.firstChild) {
+                    menu.removeChild(menu.firstChild);
+                }
+
+                $('#upload').val('') // this will clear the input val.
+                $uploadCrop = null;
+            })
+
+        })
+    </script>
+}

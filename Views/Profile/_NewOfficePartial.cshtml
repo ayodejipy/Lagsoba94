@@ -1,0 +1,57 @@
+﻿@model Lagsoba94.Models.ViewModel.OfficeVM
+
+
+@Html.AntiForgeryToken()
+
+
+<form id="newOfficeForm">
+    @Html.ValidationMessage("error", htmlAttributes: new { @class = "text-danger" })
+    @if (ViewBag.Errors != null)
+    {
+        <p class="alert alert-danger">@ViewBag.Errors</p>
+    }
+    <p class="alert alert-success" style="display:none;" id="successP">Election dates updated.</p>
+    <p class="alert alert-danger fade show" style="display: none;" id="errorP"></p>
+
+    <div class="form-group row">
+        <div class="col-12">
+            <label>Name</label>
+            @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+        </div>
+
+        <div class="col-12">
+            <label>Description</label>
+            @Html.TextAreaFor(model => model.Description, new { @class = "form-control" })
+            <span class="text-info"><em>250 characters maximum.</em></span>
+        </div>
+    </div>
+</form>
+
+<script>
+    function addOffice() {
+        $('#errorP').hide('slow')
+        $('#successP').hide('slow');
+
+        $('#newLoaderSpan').show('slow')
+        data = $('#newOfficeForm').serialize();
+
+        $.ajax({
+            type: "POST",
+            url: "/profile/_newofficepartial",
+            cache: false,
+            data: data,
+            success: function (result) {
+                if (result.Status === 0) {
+                    $('#errorP').html(result.Message)
+                    $('#errorP').show('slow');
+                    $('#loaderSpan').hide('slow')
+                } else if (result.Status === 1) {
+                     window.location.href = "/profile/executive-office"
+                }
+            },
+            failure: function () {
+                alert("An error occured, please try again.")
+            }
+        })
+    }
+</script>

@@ -1,0 +1,157 @@
+﻿@model Lagsoba94.Areas.Vote.Models.ViewModel.VoteResult
+@{
+    ViewBag.Title = "Vote Results";
+}
+
+<style>
+    .loader {
+        width: auto;
+        height: 15px;
+        margin-left: 4px;
+        display: none;
+    }
+</style>
+
+<section class="my-4">
+    <div class="container">
+
+        <div id="divSuccess" class="alert alert-success collapse">
+            <a id="linkCloseSuccess" href="#" class="close">&times;</a>
+            <div id="divSuccessText"></div>
+        </div>
+
+        <div id="divError" class="alert alert-danger collapse">
+            <a id="linkCloseError" href="#" class="close">&times;</a>
+            <div id="divErrorText">An error occured, please try again later.</div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-sm-5 grid-margin stretch-card">
+                <div class="card card-vote-gradient">
+                    <div class="card-body">
+                        <h5 class="text-center m-0">Vote Count</h5>
+                        <p style="font-size: 12px;" class="text-center text-info">
+                            <em>Click the position name to view postition vote result</em>
+                        </p>
+                    </div>
+                    <div class="card-body bg-white">
+                        <table>
+                            <tbody>
+                                @foreach (var position in Model.Positions)
+                                {
+                                    <tr>
+                                        <td class="py-1">
+                                            <span class="text-capitalize text-uppercase font-weight-bold">
+                                                #
+                                                @Ajax.ActionLink(position.Name, "position-vote-result/" + position.Id, new AjaxOptions
+                                                {
+                                                    HttpMethod = "GET",
+                                                    UpdateTargetId = "positionVoteResult",
+                                                    LoadingElementId = position.Name.Replace(' ', '-'),
+                                                    InsertionMode = InsertionMode.Replace,
+                                                    AllowCache = false
+                                                })
+                                            </span>
+
+                                            <img src="~/Content/assets/img/loader.gif" class="loader" id="@position.Name.Replace(' ', '-')" />
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="pb-3">
+                                            <table class="table-striped" width="100%">
+                                                <thead class="thead-inverse">
+                                                    @if (position.IsActive == false)
+                                                    {
+                                                        <tr style="background-color: #0094ff; color: #fff;">
+                                                            <th class="text-danger">Deactivated</th>
+                                                        </tr>
+                                                    }
+                                                    else
+                                                    {
+
+                                                        if (Model.CandidateScores
+                                                            .Where(x => x.PositionId == position.Id).Count() <= 0)
+                                                        {
+                                                            <tr style="background-color: #0094ff; color: #fff;">
+                                                                <th>No candidates</th>
+                                                            </tr>
+                                                        }
+                                                        else
+                                                        {
+                                                            <tr style="background-color: #0094ff; color: #fff;">
+                                                                <th>Name</th>
+                                                                <th class="pl-3">Count</th>
+                                                            </tr>
+                                                        }
+                                                    }
+                                                </thead>
+
+                                                <tbody>
+                                                    @if (position.IsActive == true)
+                                                    {
+                                                        foreach (var candidate in Model.CandidateScores
+                                                            .Where(x => x.PositionId == position.Id))
+                                                        {
+                                                            <tr>
+                                                                <td class="p-1">
+                                                                    @candidate.Name
+                                                                </td>
+                                                                <td class="p-1 text-center">
+                                                                    @candidate.VoteCount
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-7 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <p>Vote result will be shown here</p>
+                        <div id="positionVoteResult"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+
+    </div> <!-- container -->
+</section>
+
+
+@section scripts {
+
+
+    <script src="~/Scripts/jquery-3.4.1.min.js" defer></script>
+    <script src="~/Scripts/jquery.validate.min.js" defer></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js" defer></script>
+
+    <script>
+
+        $("ul").find("[data-slide='#positionVoteResult']").click(function () {
+            alert('this"')
+        })
+
+        $('#linkCloseSuccess').click(function () {
+            $('#divSuccess').hide('fade');
+        })
+
+        $('#linkCloseError').click(function () {
+            $('#divError').hide('fade');
+        })
+    </script>
+}

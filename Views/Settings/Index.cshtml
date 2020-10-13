@@ -1,0 +1,291 @@
+﻿@model Lagsoba94.Models.ViewModel.EditSettings
+
+@{
+    ViewBag.Title = "Page Contents";
+}
+
+<style>
+    .nav .nav-item {
+        text-transform: uppercase;
+    }
+
+        .nav .nav-item .active {
+            background-color: #0067a4;
+            color: #fff;
+        }
+
+    .dot {
+        height: 10px;
+        width: 10px;
+        background-color: red;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .sec {
+        position: relative;
+        right: -12px;
+        top: -22px;
+    }
+
+    .counter.counter-lg {
+        top: -10px !important;
+    }
+</style>
+
+<div class="mt-5 p-3">
+    <form action="/settings" method="post" novalidate="novalidate" id="form">
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            @if (TempData["SCC"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show w-50" role="alert">
+                    @TempData["SCC"]
+
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            }
+
+            @if (TempData["ERR"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show w-50" role="alert">
+                    @TempData["ERR"]
+
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            }
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                @* CHAIRMAN SPEECH *@
+                <li class="nav-item">
+                    <a class="nav-link active" id="ChairmanSpeech-tab" data-toggle="tab" href="#ChairmanSpeechLink" role="tab" aria-controls="ChairmanSpeech" aria-selected="true">
+                        Chairman Speech
+                        @if (ViewBag.ChairError != null)
+                        {
+                            <span class="dot sec counter counter-lg"></span>
+                        }
+                    </a>
+                </li>
+
+                @* STORY *@
+                <li class="nav-item">
+                    <a class="nav-link" id="Story-tab" data-toggle="tab" href="#StoryLink" role="tab" aria-controls="Story" aria-selected="false">
+                        Story
+                        @if (ViewBag.StoryError != null)
+                        {
+                            <span class="dot sec counter counter-lg"></span>
+                        }
+                    </a>
+                </li>
+
+                @* AIMS AND OBJECTIVES *@
+                <li class="nav-item">
+                    <a class="nav-link" id="AimsAndObjectives-tab" data-toggle="tab" href="#AimsAndObjectivesLink" role="tab" aria-controls="AimsAndObjectives" aria-selected="false">
+                        Aims and Objectives
+                        @if (ViewBag.AimsError != null)
+                        {
+                            <span class="dot sec counter counter-lg"></span>
+                        }
+                    </a>
+                </li>
+
+                @* MISSION *@
+                <li class="nav-item">
+                    <a class="nav-link" id="Mission-tab" data-toggle="tab" href="#MissionLink" role="tab" aria-controls="Mission" aria-selected="false">
+                        Mission
+                        @if (ViewBag.MissionError != null)
+                        {
+                            <span class="dot sec counter counter-lg"></span>
+                        }
+                    </a>
+                </li>
+
+                @* VISION *@
+                <li class="nav-item">
+                    <a class="nav-link" id="Vision-tab" data-toggle="tab" href="#VisionLink" role="tab" aria-controls="Vision" aria-selected="false">
+                        Vision
+                        @if (ViewBag.VisionError != null)
+                        {
+                            <span class="dot sec counter counter-lg"></span>
+                        }
+                    </a>
+                </li>
+
+                @* ACHIEVEMENTS *@
+                <li class="nav-item">
+                    <a class="nav-link" id="Achievements-tab" data-toggle="tab" href="#AchievementsLink" role="tab" aria-controls="Achievements" aria-selected="false">
+                        Achievements
+                    </a>
+                </li>
+            </ul>
+
+            @* CONTENTS OF EACH TAB *@
+            <div class="tab-content" id="myTabContent">
+                @* CHAIRMAN SPEECH *@
+                <div class="tab-pane fade show active" id="ChairmanSpeechLink" role="tabpanel" aria-labelledby="ChairmanSpeech-tab">
+                    <div class="jumbotron jumbotron-fluid p-2">
+                        <div class="container-fluid p-3">
+                            @if (ViewBag.ChairError != null)
+                            {
+                                <p class="text-danger">@ViewBag.ChairError</p>
+                            }
+
+                            <div class="text-info">
+                                <p>This is located on the home page. <a href="~/home/index#ChairmanSpeech" target="_blank">Click Here</a> to view. <br />What you edit here only affects the Speech, excluding the images.</p>
+                                <p>This can only take maximum of <span class="text-danger">350</span> words</p>
+                            </div>
+
+                            @Html.TextAreaFor(model => model.ChairmanSpeech)
+                            @Html.ValidationMessageFor(model => model.ChairmanSpeech, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                @* STORY *@
+                <div class="tab-pane fade" id="StoryLink" role="tabpanel" aria-labelledby="Story-tab">
+                    <div class="jumbotron jumbotron-fluid p-2">
+                        <div class="container-fluid p-3">
+                            @if (ViewBag.StoryError != null)
+                            {
+                                <p class="text-danger">@ViewBag.StoryError</p>
+                            }
+
+                            <div class="text-info">
+                                <p>This can only take maximum of <span class="text-danger">500</span> words</p>
+                            </div>
+
+                            @Html.TextAreaFor(model => model.Story)
+                            @Html.ValidationMessageFor(model => model.Story, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                @* AIMS AND OBJECTIVES *@
+                <div class="tab-pane fade" id="AimsAndObjectivesLink" role="tabpanel" aria-labelledby="AimsAndObjectives-tab">
+                    <div class="jumbotron jumbotron-fluid p-2">
+                        <div class="container-fluid p-3">
+                            @if (ViewBag.AimsError != null)
+                            {
+                                <p class="text-danger">@ViewBag.AimsError</p>
+                            }
+
+                            <div class="text-info">
+                                <p>This can only take maximum of <span class="text-danger">85</span> words</p>
+                            </div>
+
+                            @Html.TextAreaFor(model => model.AimsAndObjectives)
+                            @Html.ValidationMessageFor(model => model.AimsAndObjectives, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                @* MISSION *@
+                <div class="tab-pane fade" id="MissionLink" role="tabpanel" aria-labelledby="Mission-tab">
+                    <div class="jumbotron jumbotron-fluid p-2">
+                        <div class="container-fluid p-3">
+                            @if (ViewBag.MissionError != null)
+                            {
+                                <p class="text-danger">@ViewBag.MissionError</p>
+                            }
+
+                            <div class="text-info">
+                                <p>This can only take maximum of <span class="text-danger">80</span> words</p>
+                            </div>
+
+                            @Html.TextAreaFor(model => model.Mission)
+                            @Html.ValidationMessageFor(model => model.Mission, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                @* VISION *@
+                <div class="tab-pane fade" id="VisionLink" role="tabpanel" aria-labelledby="Vision-tab">
+                    <div class="jumbotron jumbotron-fluid p-2">
+                        <div class="container-fluid p-3">
+                            @if (ViewBag.VisionError != null)
+                            {
+                                <p class="text-danger">@ViewBag.VisionError</p>
+                            }
+
+                            <div class="text-info">
+                                <p>This can only take maximum of <span class="text-danger">80</span> words</p>
+                            </div>
+
+                            @Html.TextAreaFor(model => model.Vision)
+                            @Html.ValidationMessageFor(model => model.Vision, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                @* ACHIEVEMENTS *@
+                <div class="tab-pane fade" id="AchievementsLink" role="tabpanel" aria-labelledby="Achievements-tab">
+                    <div class="jumbotron jumbotron-fluid p-2">
+                        <div class="container-fluid p-3">
+                            @Html.TextAreaFor(model => model.Achievements)
+                            @Html.ValidationMessageFor(model => model.Achievements, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save Changes" class="btn btn-lg btn-primary approve-mem-req my-1" />
+            </div>
+        </div>
+    </form>
+</div>
+
+
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script src="//cdn.ckeditor.com/4.14.1/full/ckeditor.js"></script>
+    <script src="~/Scripts/ckfinder/ckfinder.js"></script>
+    <script>
+        CKEDITOR.replace("ChairmanSpeech", {
+            customConfig: '/Scripts/custom_ckeditor.js'
+        });
+
+        CKEDITOR.replace("Story", {
+            customConfig: '/Scripts/custom_ckeditor.js'
+        });
+
+        CKEDITOR.replace("AimsAndObjectives", {
+            customConfig: '/Scripts/custom_ckeditor.js'
+        });
+
+        CKEDITOR.replace("Mission", {
+            customConfig: '/Scripts/custom_ckeditor.js'
+        });
+
+        CKEDITOR.replace("Vision", {
+            customConfig: '/Scripts/custom_ckeditor.js'
+        });
+
+        CKEDITOR.replace("Achievements", {
+            customConfig: '/Scripts/custom_ckeditor.js'
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // activates every select list
+            (function () {
+                $('.nice-select').remove();
+            })()
+
+            $('#form').on('submit', function () {
+                for (instance in CKEDITOR.instances) {
+                    CKEDITOR.instances[instance].updateElement();
+                }
+            });
+        });
+    </script>
+}

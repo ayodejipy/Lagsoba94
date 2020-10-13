@@ -1,0 +1,124 @@
+﻿@model IEnumerable<Lagsoba94.Areas.Vote.Models.ViewModel.NewCandidatesVM>
+
+@{
+    ViewBag.Title = "Select Candidate From Voters";
+}
+
+<div class="container pt-25">
+
+    <!-- Row -->
+    <div class="row my-3 manage-vote-pos">
+        <div class="col-lg-12 col-xs-12">
+
+            <div>
+                <a href="@Url.Action("candidate-for", new { positionName = TempData["PositionName"] })" class="btn btn-go-back"><i class="fas fa-sign-out-alt mr-1" aria-hidden="true"></i> Back to @TempData["PositionName"] Position </a>
+            </div>
+
+            <div class="my-2">
+                <div class="mb-2">
+                    <span class="text-info">
+                        <em>Anyone who is a candidate for any position already is not listed here.</em>
+                    </span>
+                </div>
+
+                <table class="table user-table" id="dataTable" width="100%" cellspacing="0">
+                    <thead style="background: #0068a5; color: #fff">
+                        <tr>
+                            <th>Name</th>
+                            <th>@Html.DisplayNameFor(model => model.Email)</th>
+                            <th>@Html.DisplayNameFor(model => model.Phone)</th>
+                            <th> Status </th>
+                            <th> Action </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Email)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Phone)
+                                </td>
+                                <td>
+                                    @if (item.IsVoter)
+                                    {
+                                        <p class="text-primary text-uppercase">Voter</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="text-danger text-uppercase">Not Voter</p>
+                                    }
+                                </td>
+                                <td>
+                                    <a href="#" id="" class="btn btn-primary @item.UserId" onclick="makeCandidate(@item.UserId, @TempData["PositionId"])">
+                                        Make Candidate
+                                        <span class="spinner-grow spinner-grow-sm" id="@item.UserId" style="display: none;"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- /Row -->
+</div>
+
+
+@section Scripts{
+    <script>
+        (function () {
+            $(document).ready(function () {
+                $('#dataTable').DataTable({
+                    "language": {
+                        "paginate": {
+                            "next": '<i class="fas fa-angle-right"></i>',
+                            "previous": '<i class="fas fa-angle-left"></i>'
+                        }
+                    }
+                });
+            });
+        })()
+    </script>
+}
+
+<script>
+    function makeCandidate(userId, positionId) {
+        // show loader
+        $('.' + userId).html('Processing...')
+        $('#' + userId).show('slow')
+
+        // disable button
+        $('.' + userId).addClass('disabled')
+
+        // send ajax post
+        $.ajax({
+            type: "POST",
+            url: "/vote/candidate/MakeNewCandidate",
+            cache: false,
+            data: { userId: userId, positionId: positionId },
+            success: function (result) {
+                if (result.Status === 0) {
+                    alert(result.Message);
+                    // enable button
+                    $('.' + userId).removeClass('disabled')
+                    $('.' + userId).html('Make Candidate')
+                } else {
+                    $('.' + userId).html('Success')
+                }
+
+                $('#' + userId).hide('slow')
+            },
+            failure: function () {
+                alert("An error occured, please try again.")
+            }
+        })
+    }
+</script>

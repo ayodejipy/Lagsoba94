@@ -1,0 +1,198 @@
+﻿@using Lagsoba94.Models
+@model IEnumerable<Lagsoba94.Models.UsersList>
+@{
+    ViewBag.Title = "All Users";
+}
+
+<!-- Breadcrumb -->
+<section class="section-contact mb-3">
+    <div class="page-breadcrumb p-4">
+        <div class="hero-bg--overlay"></div>
+        <div class="container h-100">
+            <div class="row h-100">
+                <div class="hero-content d-flex align-items-center justify-content-center">
+                    <div class="d-flex w-100 flex-column align-items-center justify-content-center">
+                        <h3 class="text-white text-center">
+                            @ViewBag.Title
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ./ breadcrumb -->
+
+
+<div class="container pt-25">
+
+    <!-- Row -->
+    <div class="row my-3 manage-users">
+        <div class="col-lg-12 col-xs-12">
+            <div class="heading my-3">
+                <h3 class="page-title">Manage all Users</h3>
+                <p class="lead page-subtitle">List of members, assign role to specific user.</p>
+            </div>
+
+            <div class="my-5">
+                <table class="table user-table mt-5" id="dataTable" width="100%" cellspacing="0">
+                    <thead style="background: #4a8efa; color: #fff">
+                        <tr>
+                            <th>#</th>
+                            <th>Full Name</th>
+                            <th>Member Role</th>
+                            <th>Email Address</th>
+                            <th>Assign To Role</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @user.Count
+                                </td>
+
+                                <td class="text-primary font-weight-bold">
+                                    <a href="~/profile/user-profile?memberName=@user.FullName&userId=@user.UserId">@user.FullName</a>
+                                </td>
+
+                                <td>
+                                    @user.RoleNames
+                                </td>
+
+                                <td>
+                                    @user.Email
+                                </td>
+                                <td>
+                                    @if (user.RoleNames.Contains("Executive"))
+                                    {
+                                        <button class="btn btn-danger remove-executive" onclick="removeExecutive(@user.UserId)">
+                                            Remove as Executive
+                                            <span class="spinner-grow spinner-grow-sm" id="add-@user.UserId" style="display: none;margin: 5px 0px 0px 5px;"></span>
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-primary make-executive" onclick="openExecutiveModal(@user.UserId)">
+                                            Make Executive
+                                            <span class="spinner-grow spinner-grow-sm" id="remove-@user.UserId" style="display: none;margin: 5px 0px 0px 5px;"></span>
+                                        </button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- /Row -->
+</div>
+
+@* MODAL TO ASSIGN USER TO AN OFFICE *@
+<div class="modal fade" id="newExecutiveModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">New Office</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <h4>Select an office from the dropdown to assign user to.</h4>
+                    <select class="form-control custom-select mt-5 mb-2 w-50" id="officeList">
+                        @using (var db = new DbContext())
+                        {
+                            foreach (var item in db.Office.Where(x=>x.OfficeId != 1).ToList())
+                            {
+                                <option value="@item.OfficeId">@item.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-sm btn-primary my-1" onclick="makeExecutive()">
+                    ASSIGN
+                    <span class="spinner-grow spinner-grow-sm" id="executiveLoaderSpan" style="display: none;margin: 5px 0px 0px 5px;"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        var officeId = 0;
+        var userId = 0;
+
+        (function () {
+            $('.nice-select').remove();
+
+            $(document).ready(function () {
+                $('#dataTable').DataTable({
+                    "language": {
+                        "paginate": {
+                            "next": '<i class="fas fa-angle-right"></i>',
+                            "previous": '<i class="fas fa-angle-left"></i>'
+                        }
+                    }
+                });
+            });
+        })()
+
+        function openExecutiveModal(id) {
+            userId = id;
+            $('#newExecutiveModal').modal('show')
+        }
+
+        // add user to executive role
+        function makeExecutive() {
+            var loader = '#add-' + userId
+            $(loader).show('slow')
+
+            $('#executiveLoaderSpan').show('slow')
+
+
+            officeId = $('#officeList').find(":selected").val();
+            var data = { "userId": userId, "officeId": officeId }
+            $.ajax({
+                type: "GET",
+                url: "/profile/make-executive/",
+                cache: false,
+                dataType: "text",
+                data: data
+            }).done(function (msg) {
+                //alert(msg);
+                window.location.reload()
+            });
+        }
+
+        // remove user from executive role
+        function removeExecutive(userId) {
+            var loader = '#remove-' + userId
+            $(loader).show('slow')
+
+            var data = { "userId": userId }
+            $.ajax({
+                type: "GET",
+                url: "/profile/remove-executive/",
+                cache: false,
+                dataType: "text",
+                data: data
+            }).done(function (msg) {
+                //alert(msg);
+                window.location.reload()
+            });
+        }
+
+    </script>
+
+
+}

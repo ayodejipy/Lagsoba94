@@ -1,0 +1,126 @@
+﻿@{
+    ViewBag.Title = "Contact";
+}
+
+<!-- Breadcrumb -->
+<section class="section-contact mb-3">
+    <div class="hero-wrapper p-4">
+        <div class="hero-bg--overlay"></div>
+        <div class="container h-100">
+            <div class="row h-100">
+                <div class="hero-content d-flex align-items-center justify-content-center">
+                    <div class="d-flex w-100 flex-column align-items-center justify-content-center">
+                        <h3 class="text-white text-center">
+                            Contact us
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ./ breadcrumb -->
+<!-- contact lagsoba -->
+<section class="section-contact my-5">
+    <div class="container about-lagsoba">
+        <div class="row">
+            <div class="col-12 col-md-4">
+                <div class="h-100 p-4">
+                    <div class="d-flex flex-column flex-wrap">
+                        <div class="contact-box h-100d-flex flex-column bg-overlay-dark-7 px-3 py-4" style="">
+                            <!-- Phone -->
+                            <div class="contact-info mb-2">
+                                <div class="contact-box-icon">
+                                    <span><i class="fas fa-map-marker-alt mr-2"></i> 1421 Coburn Hollow Road Metamora, Near Center Point, IL 61548.</span>
+                                    
+                                </div>
+                                @*<h5 class="mb-2">Address</h5>
+                                <p>1421 Coburn Hollow Road Metamora, Near Center Point, IL 61548.</p>*@
+                            </div>
+                            <!-- Email -->
+                            <div class="contact-info mb-2">
+                                <div class="contact-box-icon">
+                                    <span><i class="fas fa-mail-bulk mr-2"></i> admin@lagsoba.com</span>
+                                </div>
+                                @*<h5 class="mb-2">E-mail</h5>
+                                <p>admin@lagsoba.com</p>*@
+                            </div>
+                            <!-- Phone -->
+                            <div class="contact-info mb-2">
+                                <div class="contact-box-icon">
+                                     <span><i class="fas fa-phone mr-2"></i> +234-805-302-6557</span>
+                                </div>
+                                @*<h5 class="mb-2">Phone</h5>*@
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-8">
+                <div class="contact-form-wrap h-100 mt-3">
+                    <h3>Have any query? Let's talk it through together!</h3>
+                    <p>Get in touch with us to see how we can help you.</p>
+                    <form class="contact-form" id="contact-form" name="contactform" action="assets/include/contact-action.php">
+                        <!-- Start form message -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="alert alert-success contact-msg" style="display: none" role="alert">
+                                    Your message was sent successfully.
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End form message -->
+                        <!-- Start main form -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- name -->
+                                <span class="form-group">
+                                    <label for="email">Name</label>
+                                    <input id="con-name" name="name" type="text" class="form-control">
+                                </span>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- email -->
+                                <span class="form-group">
+                                    <label for="email">Email</label>
+                                    <input id="con-email" name="email" type="email" class="form-control">
+                                </span>
+                            </div>
+                            <div class="col-md-12">
+                                <!-- Subject -->
+                                <span class="form-group">
+                                    <label for="subject">Enquiry type</label>
+                                    <select class="form-control">
+                                        <option selected>Select enquiry type</option>
+                                        <option>Contact Lagsoba'94 Admin</option>
+                                        <option>Request to Welfare </option>
+                                    </select>
+                                </span>
+                            </div>
+                            <div class="col-md-12">
+                                <!-- Subject -->
+                                <span class="form-group">
+                                    <label for="subject">Subject</label>
+                                    <input id="con-subject" name="subject" type="text" class="form-control" required>
+                                </span>
+                            </div>
+                            <div class="col-md-12">
+                                <!-- Message -->
+                                <span class="form-group">
+                                    <label for="message">Message</label>
+                                    <textarea id="con-message" name="message" cols="40" rows="6" class="form-control"></textarea>
+                                </span>
+                            </div>
+                            <!-- submit button -->
+                            <div class="col-md-12 text-center"><button class="btn btn-primary btn-send-mail mt-3 btn-block">Send Message</button></div>
+                        </div>
+                        <!-- End main form -->
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- /.contact lagsoba -->

@@ -1,0 +1,233 @@
+﻿@model Lagsoba94.Models.IndexViewModel
+
+<div class="top-photo">
+    <img src="https://picsum.photos/id/1031/2000/500">
+</div>
+
+<div class="container pt-25">
+    <div class="row">
+        <div class="col-lg-4 my-5">
+            <div class="user-card">
+                <div class="profile-img-wrap center">
+                    @if (Model.UserImage != null)
+                    {
+                        <img class="inline-block mb-10" src="@Model.UserImage" alt="@Model.Profile.FirstName">
+                    }
+                    else
+                    {
+                        <img class="inline-block mb-10" src="~/Content/assets/img/user.jpg" alt="@Model.Profile.FirstName" />
+                    }
+                </div>
+                <div class="user-description">
+                    <h5 class="mb-2"> @Model.Profile.Title @Model.Profile.FirstName @Model.Profile.LastName.ToString()</h5>
+                    <span class="font-weight-bold">@Model.Profile.Profession</span>
+
+                </div>
+                <div class="user-description">
+                    <div>
+                        <span class="font-weight-bold">Email: </span>
+                        <span>@Model.Profile.Email</span>
+                    </div>
+                    <div>
+                        <span class="font-weight-bold">Phone: </span>
+                        <span>@(Model.PhoneNumber ?? "N/A")</span>
+                    </div>
+                    <div>
+                        <span class="font-weight-bold">Gender:</span>
+                        <span>@Model.Profile.Gender</span>
+                    </div>
+                    <div>
+                        <span class="font-weight-bold">Date of Birth:</span>
+                        <span>@Model.Profile.DOB.Value.ToShortDateString()</span>
+                    </div>
+                </div>
+                <div class="user-actions">
+                    @if (Model.HasPassword)
+                    {
+                        <div class="mb-4">
+                            <a class="btn btn-sm btn-info" href="/profile/edit-profile?userId=@Model.Profile.Id">Edit Profile</a>
+                            <a class="btn btn-sm btn-warning" href="/profile/ChangePassword">Change Password</a>
+                        </div>
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Create", "SetPassword")
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8 my-5">
+            <div class="row h-100">
+                <div class="col-lg-12 user-card px-3">
+                    <div class="info">
+                        <h5 class="py-3">Biography/Short Info</h5>
+
+                        <div class="bio">
+                            <p>@Model.Profile.Profile</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-12 user-card px-3 mt-2">
+                    <div class="row h-100 px-3">
+                        <div class="col-12 col-lg-7">
+                            <div class="info">
+                                <h5 class="py-3">Contact Information</h5>
+
+                                <div>
+                                    <span class="font-weight-bold text-uppercase">Address:</span>
+                                    <span>@Model.UserAddresss.Address</span>
+                                </div>
+                                <div>
+                                    <span class="font-weight-bold text-uppercase">City:</span>
+                                    <span>@Model.UserAddresss.City</span>
+                                </div>
+                                <div>
+                                    <span class="font-weight-bold text-uppercase">State:</span>
+                                    <span>@Model.UserAddresss.State</span>
+                                </div>
+                                <div>
+                                    <span class="font-weight-bold text-uppercase">Zip:</span>
+                                    <span>@(Model.UserAddresss.Zip ?? "N/A")</span>
+                                </div>
+                                <div>
+                                    <span class="font-weight-bold text-uppercase">Country:</span>
+                                    <span>@Model.UserAddresss.Country</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-5">
+                            <div class="other my-2">
+                                <h5 class="py-3">ACTION</h5>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <div>
+                                        <a class="btn btn-sm btn-primary my-1" href="~/profile/all-users">
+                                            All Users
+                                        </a>
+
+                                        <a class="btn btn-sm btn-primary my-1" href="~/profile/all-voters">
+                                            Vote App Users
+                                        </a>
+
+                                        <a class="btn btn-sm btn-primary my-1" href="#" data-toggle="modal" data-target="#electionDateModal">
+                                            Update Election Dates
+                                        </a>
+
+                                        <a class="btn btn-sm btn-primary my-1" href="~/blog/news-management">
+                                            Manage News
+                                        </a>
+
+                                        <a class="btn btn-sm btn-primary my-1" href="~/blog/add-news">
+                                            Add News
+                                        </a>
+
+                                        <a class="btn btn-sm btn-primary my-1" href="~/account/requests">
+                                            Member Requests
+                                        </a>
+                                        
+                                        <a class="btn btn-sm btn-primary my-1" href="~/profile/executive-office">
+                                            Manage Executive Offices
+                                        </a>
+
+                                        <a class="btn btn-sm btn-primary my-1" href="~/settings">
+                                            Edit Page Contents
+                                        </a>
+
+                                        <a class="btn btn-sm btn-primary my-1" href="~/settings/gallery">
+                                            Edit Gallery Images
+                                        </a>
+                                    </div>
+                                }
+
+                                else if (User.IsInRole("Electoral Admin") || User.IsInRole("Electoral Supervisor"))
+                                {
+                                    <div>
+                                        <a class="btn btn-sm btn-primary"
+                                           href="~/profile/all-voters"> Vote App Users </a>
+                                    </div>
+                                }
+                                else
+                                {
+
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="other my-2">
+                        <h5 class="py-3">Management</h5>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <div>
+                                <a class="btn btn-sm btn-primary" href="~/profile/all-users">
+                                    All Users
+                                </a>
+
+                                <a class="btn btn-sm btn-primary" href="~/profile/all-voters">
+                                    Vote App Users
+                                </a>
+                                <a class="btn btn-sm btn-primary approve-mem-req" href="~/account/requests">
+                                    Member Requests
+                                </a>
+
+                            </div>
+                        }
+
+                        else if (User.IsInRole("Electoral Admin") || User.IsInRole("Electoral Supervisor"))
+                        {
+                            <div>
+                                <a class="btn btn-sm btn-primary"
+                                   href="~/profile/all-voters"> Vote App Users </a>
+                            </div>
+                        }
+                        else
+                        {
+                            @*<div class="col-lg-4 col-xs-12">
+                                        <div class="mt-3">
+                                            <h4>News Management</h4>
+                                            <ul class="list-group">
+                                                <li class="list-group-item">
+                                                    <a href="~/blog/add-news">
+                                                        Publish News
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                </div>*@
+                        }
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@* MODAL TO CHANGE ELECTION DATES *@
+<div class="modal fade" id="electionDateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Election Date</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @Html.Action("_ElectionDatePartial", "Profile")
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary approve-mem-req my-1" onclick="changeDate()" style="display: inherit;">
+                    Save changes
+                    <span class="spinner-grow spinner-grow-sm" id="loaderSpan" style="display: none;margin: 5px 0px 0px 5px;"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

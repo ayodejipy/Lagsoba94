@@ -1,0 +1,270 @@
+﻿@model IEnumerable<Lagsoba94.Models.MembershipRequestVM>
+
+@{
+    ViewBag.Title = "Membership Requests";
+}
+
+<style>
+    .hideLoader {
+        display: none;
+    }
+
+    .showLoader {
+        display: inherit !important;
+    }
+</style>
+
+<section>
+    <section class="container padding_top">
+
+        <div class="row my-3">
+            <div class="col-md-12">
+
+                <h3>Membership Requests</h3>
+
+                @if (Model.Count() == 0)
+                {
+                    <h5>There are currently no request from your chapel.</h5>
+                }
+                else if (Model.Count() == 1)
+                {
+                    if (TempData["SM"] != null)
+                    {
+                        if (TempData["SM"].ToString().Contains("successfully"))
+                        {
+                            <div class="alert alert-success">
+                                @TempData["SM"]
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-danger">
+                                @TempData["SM"]
+                            </div>
+                        }
+                    }
+
+                    foreach (var item in Model)
+                    {
+                        <div class="container">
+                            <div class="row my-3">
+                                <div class="col-md-3">
+                                    <div class="w-100 d-flex justify-content-center p-3" style="border: 1px solid rgba(251, 133, 49, 0.70);">
+                                        <img src="@item.ImageString" class="img-fluid" style="width: auto; height: 250px;" />
+                                    </div>
+
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p><strong>Name:</strong> @item.FirstName @item.LastName @item.OtherNames</p>
+                                            <p><strong>Profession:</strong> @item.Profession</p>
+                                            <p><strong>Profile:</strong> @item.Profile</p>
+                                            <p><strong>Gender:</strong> @item.Gender</p>
+                                            <p><strong>Date of Birth:</strong> @item.DOB.ToShortDateString()</p>
+                                            <p><strong>Phone:</strong> @item.Phone</p>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <p><strong>Email:</strong> @item.Email</p>
+                                            <p><strong>Address:</strong> @item.Address</p>
+                                            <p><strong>City:</strong> @item.City</p>
+                                            <p><strong>State:</strong> @item.State</p>
+                                            <p><strong>Country:</strong> @item.Country</p>
+                                            <p><strong>Zip:</strong> @item.Zip</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h6 class="text-danger">Security Questions</h6>
+                                            <p><strong>First Year Group:</strong> @item.FirstYear</p>
+                                            <p><strong>Final Year Group:</strong> @item.FinalYear</p>
+                                            <p><strong>Nickname:</strong> @item.NickName</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            @if (item.UserApproved == true)
+                                            {
+                                                <h5 class="text-success">APPROVED!</h5>
+                                                <a href="#" class="btn btn-info" onclick="ResendConfirmEmail(@item.Id)">Re-send Notification</a>
+                                            }
+                                            else if (item.UserApproved == false)
+                                            {
+                                                <h5 class="text-danger">DECLINED!</h5>
+                                                <a href="#" class="btn btn-info" onclick="ResendDeclineEmail(@item.Id)">Re-send Notification</a>
+                                                @Html.ActionLink("APPROVE", "Approve", new { id = @item.Id }, new { @class = "btn btn-primary" })
+                                            }
+                                            else
+                                            {
+                                                @Html.ActionLink("APPROVE", "approve", new { id = @item.Id }, new { @class = "btn btn-primary mr-3" })
+                                                @Html.ActionLink("DECLINE", "decline", new { id = @item.Id }, new { @class = "btn btn-danger" })
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-2">
+                                
+                            </div>
+                        </div>
+                    }
+
+                }
+                else
+                {
+                    if (TempData["SM"] != null)
+                    {
+                        if (TempData["SM"].ToString().Contains("successfully"))
+                        {
+                            <div class="alert alert-success">
+                                @TempData["SM"]
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-danger">
+                                @TempData["SM"]
+                            </div>
+                        }
+                    }
+
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="text-right">
+                <img class="loader hideLoader" src="~/img/loader.gif" style="height:auto; width:36px; margin-right:36px;" />
+            </div>
+
+                    <table class="table table-hover table-condensed table-responsive">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th style="width: 24%">Name</th>
+                                <th style="width: 12%">Profession</th>
+                                <th style="width: 8%">First Year</th>
+                                <th style="width: 8%">Final Year</th>
+                                <th style="width: 8%">Nickname</th>
+                                <th style="width: 10%">Status</th>
+                                <th style="width: 30%"></th>
+                            </tr>
+                        </thead>
+                        @foreach (var item in Model)
+                        {
+                            <tbody>
+                                <tr>
+                                    <td data-th="Name">
+                                        <p>@item.Title @item.FirstName.ToUpper()  @item.LastName @item.OtherNames</p>
+                                    </td>
+                                    <td data-th="Profession">
+                                        <p>@item.Profession</p>
+                                    </td>
+                                    <td data-th="First Year">
+                                        <p>@item.FirstYear</p>
+                                    </td>
+                                    <td data-th="Final Year">
+                                        <p>@item.FinalYear</p>
+                                    </td>
+                                    <td data-th="Nickname">
+                                        <p>@item.NickName</p>
+                                    </td>
+                                    <td dath-th="Status">
+                                        @if(item.UserApproved == true)
+                                        {
+                                            <h6 class="text-success">APPROVED</h6>
+                                        }
+                                        else if(item.UserApproved ==false)
+                                        {
+                                            <h6 class="text-danger">DECLINED</h6>
+                                        }
+                                        else
+                                        {
+                                            <h6 class="text-info">PENDING</h6>
+                                        }
+                                    </td>
+                                    <td class="actions" data-th="">
+                                        @if (item.UserApproved == true)
+                                        {
+                                            <a href="#" class="btn btn-info" onclick="ResendConfirmEmail(@item.Id)">Re-send Notification</a>
+                                        }
+                                        else if (item.UserApproved == false)
+                                        {
+                                            <a href="#" class="btn btn-info" onclick="ResendDeclineEmail(@item.Id)">Re-send Notification</a>
+                                            @Html.ActionLink("APPROVE", "Approve", new { id = @item.Id }, new { @class = "btn btn-primary" })
+                                        }
+                                        else
+                                        {
+                                            <div>
+                                                @Html.ActionLink("APPROVE", "Approve", new { id = @item.Id }, new { @class = "btn btn-primary" })
+                                                @Html.ActionLink("DETAILS", "requests", new { id = @item.Id }, new { @class = "btn btn-info" })
+                                                <a href="#" class="btn btn-danger" onclick="declineMember(@item.Id)">DECLINE</a>
+                                            </div>
+                                        }
+                                    </td>
+                                </tr>
+                            </tbody>
+                        }
+                    </table>
+                }
+            </div>
+        </div>
+
+    </section>
+
+</section>
+
+
+
+
+<script>
+    $(document).ajaxStart(function () {
+        $(".loader").show();
+        $('.loader').addClass('showLoader')
+    });
+
+    $(document).ajaxStop(function () {
+        $(".loader").hide();
+    });
+
+    function declineMember(memberId) {
+        var txt = prompt("Please provide a comment", "This member is not recognized.");
+        if (txt == null || txt == "") {
+            return false;
+        } else {
+            var data = { "id": memberId, "reason": txt }
+            $.ajax({
+                type: "GET",
+                url: "/account/decline/",
+                cache: false,
+                dataType: "text",
+                data: data
+            }).always(function (msg) {
+                $('.loader').addClass('showLoader')
+                alert(msg);
+                window.location.reload()
+            });
+        }
+    }
+
+    function ResendConfirmEmail(memberId) {
+        $.ajax({
+            type: "GET",
+            url: "/account/confirm-again/",
+            cache: false,
+            dataType: "text",
+            data: { id: memberId }
+        }).done(function (msg) {
+            alert(msg);
+        });
+    }
+
+    function ResendDeclineEmail(memberId) {
+        $.ajax({
+            type: "GET",
+            url: "/account/decline-again/",
+            cache: false,
+            dataType: "text",
+            data: { id: memberId }
+        }).done(function (msg) {
+            alert(msg);
+        }).fail(function () {
+            alert("Sorry. Server unavailable.");
+        });
+    }
+</script>

@@ -1,0 +1,75 @@
+﻿#imagePreview {
+    width: 180px;
+    height: 180px;
+    background-position: center center;
+    background-size: cover;
+    -webkit-box-shadow: 0 0 1px 1px rgba(0, 0, 0, .3);
+    display: inline-block;
+}
+
+.upload-msg {
+    text-align: center;
+    padding-top: 100px;
+    padding-left: 30px;
+    padding-right: 30px;
+    font-size: 22px;
+    color: #aaa;
+    width: 263px;
+    height: 420px;
+    margin: 10px auto;
+    border: 1px solid #aaa;
+    cursor: pointer;
+}
+
+.upload-demo.ready #upload-demo {
+    display: block;
+}
+
+.upload-demo.ready .buttons .upload-result, .upload-demo.ready .buttons .reset, .upload-demo.ready .buttons .change-image {
+    display: inline;
+}
+
+.upload-demo.ready em.text-info {
+    display: block;
+}
+
+.upload-demo #upload-demo, .upload-demo .buttons .upload-result, .upload-demo .buttons .reset, .upload-demo.ready .upload-msg, .upload-demo .buttons .change-image, .upload-demo em.text-info {
+    display: none;
+}
+
+#upload {
+    position: absolute;
+    top: -1000px;
+}
+
+.fa-check {
+    display: none;
+}
+
+.show {
+    display: inherit !important;
+}
+
+.w-1 {
+    width: 1% !important;
+}
+
+.w-50 {
+    width: 50% !important;
+}
+
+.w-100 {
+    width: 100% !important;
+}
+
+.loader {
+    position: absolute;
+    top: 41px;
+    left: 18px;
+    border-radius: 1px;
+    padding: 0px 10px;
+    z-index: 10;
+    width: auto;
+    height: 38px;
+    display: none;
+}

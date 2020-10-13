@@ -1,0 +1,62 @@
+﻿@model Lagsoba94.Areas.Vote.Models.ViewModel.PositionVM
+
+
+@Html.AntiForgeryToken()
+
+
+    <form id="newPostionForm">
+        @Html.ValidationMessage("error", htmlAttributes: new { @class = "text-danger" })
+        @if (ViewBag.Errors != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>@ViewBag.Errors</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+        <span id="errorMsg" class="text-danger" style="display:none;"></span>
+
+        <div class="form-group row new-pos">
+            <div class="col-sm-12 col-md-3">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "New Position Name" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="col-sm-12 col-md-3">
+                <button type="button" onclick="createPosition()" class="btn btn-new-pos">
+                    Create New Position
+                    <span class="spinner-grow spinner-grow-sm" id="loader" style="display: none;"></span>
+                </button>
+            </div>
+        </div>
+    </form>
+
+
+<script>
+    function createPosition(candidateId) {
+        $('#loader').show('slow')
+        $('#errorMsg').hide('slow')
+
+        data = $('#newPostionForm').serialize();
+
+        $.ajax({
+            type: "POST",
+            url: "/vote/candidate/_createpositionpartial",
+            cache: false,
+            data: data,
+            success: function (result) {
+                if (result.Status === 0) {
+                    $('#errorMsg').html(result.Message)
+                    $('#errorMsg').show('slow')
+                     $('#loader').hide('slow')
+                } else {
+                    window.location.href = "/vote/candidate/"
+                }
+            },
+            failure: function () {
+                alert("An error occured, please try again.")
+            }
+        })
+    }
+</script>

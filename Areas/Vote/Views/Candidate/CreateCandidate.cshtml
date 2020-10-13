@@ -1,0 +1,176 @@
+﻿@model Lagsoba94.Areas.Vote.Models.ViewModel.CandidateVM
+
+@{
+    ViewBag.Title = "Create Candidate";
+}
+
+@*Croppie for cropping images*@
+<link href="~/Content/croppie.css" rel="stylesheet" />
+
+@*font awesome*@
+<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+@*style for choosing profile image*@
+<style>
+    .fa-check {
+        display: none;
+    }
+
+    .show {
+        display: inherit !important;
+    }
+</style>
+
+
+<h2>Create Candidate</h2>
+
+<p>
+    @Html.ActionLink("Select Candidate from Voters", "select-from-voters", new { positionId = ViewBag.Postion }) |
+    <a href="~/vote/candidate/candidate-for?positionName=@ViewBag.PositionName">Back To Candidates for @ViewBag.PositionName</a>
+</p>
+
+@using (Html.BeginForm("create-candidate", "Candidate", FormMethod.Post, htmlAttributes: new { id = "form" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.ValidationMessage("duplicate", htmlAttributes: new { @class = "text-danger" })
+
+        @if (TempData["SM"] != null)
+        {
+            <p class="alert alert-success">@TempData["SM"]</p>
+        }
+
+        @Html.HiddenFor(model => model.PositionId)
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        
+        <div class="form-group">
+            @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-md-10">
+                @Html.HiddenFor(model => model.ImageString)
+                <div class="upload-demo">
+                    <input type="file" id="upload" value="Select a profile picture" accept="image/*" hidden />
+                    <button type="button" class="btn btn-dark mb-3" id="chooseImage">Choose Profile Image</button>
+                    <div id="upload-demo"></div>
+                </div>
+                @Html.ValidationMessageFor(model => model.ImageString, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="">
+            <div class="">
+                <button type="button" id="submitBtn" value="Click here to set image before submitting" class="btn btn-warning">
+                    Click here to set image before submitting
+                    <i class="fa fa-check"></i>
+                </button>
+                <br />
+                <br />
+                <input type="submit" id="submit" value="Submit" class="btn btn-print" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("View All Candidates", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    @*Javascript plugin for croppie*@
+    <script src="~/Scripts/croppie.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            var $uploadCrop
+            $("#chooseImage").click(function () {
+                $("#upload").click()
+            })
+
+            function readFile(input) {
+                $uploadCrop = $("#upload-demo").croppie({
+                    viewport: {
+                        width: 288,
+                        height: 288,
+                        type: 'square'
+                    },
+                    boundary: {
+                        width: 310,
+                        height: 310
+                    },
+                    enforceBoundary: true,
+                    showZoomer: true
+                });
+
+                if (input.files && input.files[0]) {
+                    if (/^image/.test(input.files[0].type)) { // only image file
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            $uploadCrop.croppie('bind', {
+                                url: e.target.result
+                            });
+                            $('.upload-demo').addClass('ready');
+                        }
+                        reader.readAsDataURL(input.files[0]);
+                    } else {
+                        alert("You may only select image files");
+                    }
+                } else {
+                    alert("Sorry - your browser doesn't support FileReader API");
+                }
+            }
+
+            $('#upload').on('change', function () {
+                $('.fa-check').removeClass('show')
+                readFile(this)
+            })
+
+            $('#submitBtn').on('click', function () {
+                event.preventDefault()
+                $uploadCrop.croppie('result', {
+                    type: 'base64',
+                    size: 'png'
+                }).then(function (resp) {
+                    $('#ImageString').attr('value', resp)
+                })
+
+                $('.fa-check').addClass('show')
+            })
+        })
+    </script>
+}

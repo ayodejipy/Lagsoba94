@@ -1,0 +1,125 @@
+﻿@model IEnumerable<Lagsoba94.Models.AllNewsVM>
+
+@{
+    ViewBag.Title = "News Management";
+}
+
+<style>
+    .hideLoader {
+        display: none;
+    }
+
+    .showLoader {
+        display: inherit !important;
+    }
+</style>
+
+
+
+<section class="ml-2 my-3">
+    <div class="container">
+        <div class="my-3">
+            <h2>News Management</h2>
+        </div>
+
+        <div class="row my-3">
+            <table class="table user-table mt-5" id="dataTable" width="100%" cellspacing="0">
+                <thead class="thead-dark">
+                    <tr>
+                        <th style="width: 12%"></th>
+                        <th style="width: 40%">News Headline</th>
+                        <th style="width: 14%">Posted By</th>
+                        <th style="width: 14%">Date Posted</th>
+                        <th style="width: 5%">Status</th>
+                        <th style="width: 15%"></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var news in Model)
+                    {
+                        <tr>
+                            <td data-th="">
+                                <img src="~/@news.ImageSrc" />
+                            </td>
+                            <td data-th="News Headline">
+                                <a href="~/blog/news?slug=@news.Slug&id=@news.NewsId">
+                                    @news.Headline
+                                </a>
+                            </td>
+                            <td data-th="Posted By">
+                                @news.PostedBy
+                            </td>
+                            <td data-th="Date Posted">
+                                @news.DatePosted
+                            </td>
+                            <td dath-th="Status">
+                                @if (news.Authorized == true)
+                                {
+                                    <p class="text-success text-uppercase">Approved</p>
+                                }
+                                else if (news.Authorized == false)
+                                {
+                                    <p class="text-danger text-uppercase">Declined</p>
+                                }
+                                else
+                                {
+                                    <p class="text-info text-uppercase">Pending</p>
+                                }
+                            </td>
+                            <td class="actions" data-th="">
+                                @if (news.Authorized == null)
+                                {
+                                    <div id="@news.NewsId">
+                                        <a href="" class="text-success" onclick="approveNews(@news.NewsId)">Approve</a> |
+
+                                        <a href="" class="text-danger" onclick="declineNews(@news.NewsId)">Decline</a>
+
+                                        <img class="loader hideLoader" src="~/img/loader.gif" style="height:auto; width:17px;       margin-left:5px;" />
+                                    </div>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+
+</section>
+
+
+<script>
+    function approveNews(newsId) {
+        var data = { "id": newsId }
+        $.ajax({
+            type: "GET",
+            url: "/blog/approveNews/",
+            cache: false,
+            dataType: "text",
+            data: data
+        }).always(function (msg) {
+            $('#' + newsId + '.loader').addClass('showLoader')
+            alert(msg);
+            window.location.reload()
+        });
+    }
+
+    function declineNews(newsId) {
+        var data = { "id": newsId }
+        $.ajax({
+            type: "GET",
+            url: "/blog/declineNews/",
+            cache: false,
+            dataType: "text",
+            data: data
+        }).always(function (msg) {
+            $('#' + newsId + '.loader').addClass('showLoader')
+            alert(msg);
+            window.location.reload()
+        });
+    }
+</script>

@@ -1,0 +1,78 @@
+﻿@model IEnumerable<Lagsoba94.Models.ViewModels.NewsVM>
+
+@{
+    ViewBag.Title = "News";
+}
+
+<style>
+    .card {
+        min-height: 575px !important;
+    }
+
+    .card-body {
+        position: relative;
+    }
+
+        .card-body span {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+        }
+</style>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-8 mb-5 mb-lg-0">
+            <h3 class="text-black-50 font-weight-bold mb-4">LATEST POSTS</h3>
+            <div class="row">
+                @foreach (var news in Model.Take(4))
+                {
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body p-0">
+                                <a href="~/blog/news?slug=@news.Slug&id=@news.NewsId">
+                                    <img class="card-img rounded-0" src="~/@news.ImageSrc" alt="@news.Headline" style="max-height: 313px;width: auto;">
+                                </a>
+
+                                <div class="m-2">
+                                    <h5 class="card-title mt-3">
+                                        <a class="text-decoration-none" href="~/blog/news?slug=@news.Slug&id=@news.NewsId">
+                                            @news.Headline
+                                        </a>
+                                    </h5>
+                                    <p class="card-sub">
+                                        @news.Heading
+                                    </p>
+
+                                    <span class="card-text mt-3 text-right font-weight-bold align-text-bottom">
+                                        @news.UploadDate.ToLongDateString()
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <h3 class="text-black-50 font-weight-bold mb-4">ALL POSTS</h3>
+            <ul class="list-unstyled">
+                @foreach (var news in Model)
+                {
+                    <li class="media mb-3">
+                        <a href="~/blog/news?slug=@news.Slug&id=@news.NewsId">
+                            <img class="mr-3" src="~/@news.ImageSrc" style="height: auto;max-width: 80px;" alt="@news.Headline">
+                        </a>
+                        <div class="media-body">
+                            <a class="text-decoration-none" href="~/blog/news?slug=@news.Slug&id=@news.NewsId">
+                                <h6>@news.Headline</h6>
+                            </a>
+                            <span>@news.UploadDate.ToLongDateString()</span>
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>

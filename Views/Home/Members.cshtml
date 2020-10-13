@@ -1,0 +1,121 @@
+﻿@model IEnumerable<Lagsoba94.Models.ViewModels.MembersVM>
+
+@{
+    ViewBag.Title = "Members";
+}
+
+<style>
+    .img-top-right {
+        position: absolute;
+        top: -2px;
+        right: -12px;
+        border-radius: 1px;
+        padding: 0px 10px;
+        height: auto;
+        max-width: 100px;
+    }
+
+    .top-right {
+        position: fixed;
+        /*top: 10px;
+        right: 10px;*/
+        bottom: 15px;
+        min-width: 230px;
+        background-color: #f1bf28;
+        border-radius: 1px;
+        font-weight: 500;
+        font-size: 17px;
+        padding: 1px 10px;
+    }
+
+        .top-right span {
+            float: right;
+            color: #125208;
+            margin: -1px -10px;
+            padding: 1px 10px;
+            background-color: #d9d9e4;
+        }
+</style>
+
+<!-- Breadcrumb -->
+<section class="section-contact mb-3">
+    <div class="hero-wrapper p-4">
+        <div class="hero-bg--overlay"></div>
+        <div class="container h-100">
+            <div class="row h-100">
+                <div class="hero-content d-flex align-items-center justify-content-center">
+                    <div class="d-flex w-100 flex-column align-items-center justify-content-center">
+                        <h3 class="text-white text-center">
+                            Members
+                        </h3>
+                        <p class="text-white">Lagosoba'94 Members and Executives.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ./ breadcrumb -->
+
+<section class="section-excos my-5">
+    <div class="container">
+        <div class="my-3">
+            <h3 class="page-title">Executives & Members</h3>
+            <p class="page-subtitle">Shows all of Lagsoba executives and her distinguished members.</p>
+        </div>
+
+        <div class="row">
+            @foreach (var member in Model.OrderBy(x => x.Preference))
+            {
+                <div class="col-lg-4 col-md-6 col-sm-6 members-card">
+                    <div class="card mb-3" style="max-width: 440px;">
+                        <div class="row no-gutters">
+                            <div class="col-md-4">
+                                <a href="/profile/user-profile?memberName=@member.FullName&userId=@member.UserId">
+                                    <img class="card-img" alt="@member.FullName" src="@member.Image">
+                                </a>
+                            </div>
+                            <div class="col-md-8" style="position: relative">
+                                <div class="card-body">
+                                    <a href="/profile/user-profile?memberName=@member.FullName&userId=@member.UserId">
+                                        <h4 class="title_lastname">
+                                            @member.LastName @member.Preference
+                                            <i class="fas fa-check-circle verified" style="font-size: 11px;"></i>
+                                        </h4>
+                                        <h5 class="title_firstname">@member.FirstName </h5>
+                                        <h5 class="title_othername">@member.OtherNames</h5>
+
+                                    </a>
+
+
+                                    @if (member.IsExecutive)
+                                    {
+                                        <div class="office-held px-3 px-md-2 py-md-1 py-2">
+                                            @member.Office
+                                            <span class="tag">EXCO</span>
+                                        </div>
+                                        @*<p class="speciality">@member.Office</p>*@
+                                    }
+                                    else
+                                    {
+
+                                    }
+
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        @*<div class="row row-sm">
+                                                <div class="col-6">
+                                                    <a href="/profile/user-profile?memberName=@member.FullName&userId=@member.UserId"   class="btn view-profile--btn">View Profile</a>
+                                                </div>
+                                            </div>*@
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+</section>

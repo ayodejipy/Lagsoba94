@@ -1,0 +1,60 @@
+﻿@model Lagsoba94.Models.ViewModels.SingleNewsVM
+
+<section class="blog_area single-post-area">
+    <div class="container">
+        <div class="row my-5">
+            <div class="col-md-8 posts-list">
+                <div class="single-post">
+                    <div class="feature-img">
+                        <img class="img-fluid" src="~/@Model.News.ImageSrc" alt="">
+                    </div>
+
+                    <div class="blog_details">
+                        <h6>@Model.News.UploadDate.ToLongDateString()</h6>
+
+                        <h5 style="line-height: 25px; margin-bottom: 25px">
+                            @Model.News.Headline
+                        </h5>
+
+                        @Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.News.NewsBody))
+                    </div>
+                </div>
+
+                @*<div class="blog-author">
+                    <div class="media align-items-center">
+                        <img src="~/img/login/sign-up-01.jpg" alt="">
+                        <div class="media-body">
+                            <a href="#">
+                                <h4>Blog</h4>
+                            </a>
+                            <p>
+                                This is the blogging section of LAGSOBA '94
+                            </p>
+                        </div>
+                    </div>
+                </div>*@
+            </div>
+
+
+            <div class="col-lg-4">
+                <h3 class="text-black-50 font-weight-bold mb-4">RECENT POSTS</h3>
+                <ul class="list-unstyled">
+                    @foreach (var news in Model.RecentNews)
+                    {
+                        <li class="media mb-3">
+                            <a href="~/blog/news?slug=@news.Slug&id=@news.NewsId">
+                                <img class="mr-3" src="@news.ImageSrc" style="height: auto;max-width: 80px;" alt="@news.Headline">
+                            </a>
+                            <div class="media-body">
+                                <a class="text-decoration-none" href="~/blog/news?slug=@news.Slug&id=@news.NewsId">
+                                    <h6>@news.Headline</h6>
+                                </a>
+                                <span>@Model.News.UploadDate.ToLongDateString()</span>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>

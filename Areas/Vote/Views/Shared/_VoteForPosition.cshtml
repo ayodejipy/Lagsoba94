@@ -1,0 +1,56 @@
+﻿@model Lagsoba94.Areas.Vote.Models.ViewModel.VotingVM
+
+    <div class="row my-3 vote" style="position: relative;">
+        @*<h2>VOTE FOR @Model.PostionName</h2>*@
+        @if (Model.Candidates.Count() > 0)
+        {
+            foreach (var candidate in Model.Candidates)
+            {
+
+                <div class="col-sm-6 h-100 ">
+                    <div class="d-flex flex-column align-items-center justify-content-center h-100">
+                        <div class="card rounded-lg" style="width: 18rem;">
+                            <img src="@candidate.ImageUrl" class="card-img-top" alt="...">
+                            <div class="card-body text-center">
+                                <h5 class="card-title text-uppercase">@candidate.Name</h5>
+
+                                @if (!Model.VoteCasted)
+                                {
+                                    <button class="btn btn-vote" onclick="castVote('@candidate.Id')">
+                                        VOTE
+                                        <span class="spinner-grow spinner-grow-sm" hidden id=""></span>
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="text-center">
+                <h3>No candidate contesting for this post yet, check back in a few hours. Thank you!</h3>
+            </div>
+        }
+
+        @if (!Model.VoteCasted)
+        {
+            <div class="">
+                <button class="btn btn-secondary" onclick="skipVote('@Model.PostionName')">NO VOTE</button>
+            </div>
+        }
+
+    </div>
+
+
+@if (Model.VoteCasted)
+{
+    <div class="text-center">
+        <div class="alert alert-info">
+            <h3>You have voted for this post.</h3>
+            @*<a href="~/home/vote-proof?@Model.VotedCandidateId">Veiw Vote Proof</a>*@
+            @*<a href="~/home/vote" class="btn-link text-center"><h4>Back To All Positions</h4></a>*@
+        </div>
+    </div>
+}

@@ -1,0 +1,232 @@
+﻿@using System.Threading.Tasks;
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Voting App</title>
+
+    @*<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">*@
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css">
+    <link rel="stylesheet" href="~/Content/assets/vendors/datatables/dataTables.bootstrap4.min.css">
+
+    @Styles.Render("~/dashboard/css")
+    <link href="~/Content/style.css" rel="stylesheet" />
+</head>
+<body>
+    @*<section class="vote-header">
+            <div class="container">
+                <div class="row">
+                    <div class="d-flex w-100">
+                        <div class="mr-auto">
+                            <a href="~/vote/home/vote">
+                                <h2 class="mb-3 text-uppercase"> VOTE.</h2>
+                            </a>
+
+                        </div>
+                        <div>
+                            @Html.Action("_LoginPartial", "Home")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>*@
+
+    <div class="container-scroller">
+        <!-- partial:partials/_navbar.html -->
+        <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+            <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+                <a class="navbar-brand brand-logo" href="index.html"><img src="~/Content/assets/img/lags-vote-logo.png" alt="logo" /></a>
+                <a class="navbar-brand brand-logo-mini" href="index.html"><img src="~/Content/assets/img/logo-mini.png" alt="logo" /></a>
+            </div>
+            <div class="navbar-menu-wrapper d-flex align-items-stretch">
+                <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+                    <span class="mdi mdi-menu"></span>
+                </button>
+
+                <!-- Navbar profile dropdown -->
+                <ul class="navbar-nav navbar-nav-right">
+                    <li class="nav-item nav-profile dropdown">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            if (User.IsInRole("Electoral Admin"))
+                            {
+                                <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
+                                    <div class="nav-profile-img">
+                                        @*<img src="assets/images/faces/face28.png" alt="image">*@
+                                    </div>
+                                    <div class="nav-profile-text">
+                                        <p class="mb-1 text-black">Hello, @User.Identity.Name</p>
+                                    </div>
+                                </a>
+                                <div class="dropdown-menu navbar-dropdown dropdown-menu-right p-0 border-0 font-size-sm" aria-labelledby="profileDropdown" data-x-placement="bottom-end">
+                                    @*<div class="p-3 text-center bg-primary">
+                                            <img class="img-avatar img-avatar48 img-avatar-thumb" src="assets/images/faces/face28.png" alt="">
+                                        </div>*@
+                                    <div class="p-2">
+                                        <a class="dropdown-item py-1 d-flex align-items-center justify-content-between" href="~/vote/home/logout">
+                                            <span>Logout</span>
+                                            <i class="mdi mdi-logout ml-1"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <a class="nav-link" id="profileDropdown" href="#">
+                                    <div class="nav-profile-img">
+                                        @*<img src="assets/images/faces/face28.png" alt="image">*@
+                                    </div>
+                                    <div class="nav-profile-text">
+                                        <p class="mb-1 text-black">Hello, @User.Identity.Name</p>
+                                    </div>
+                                </a>
+                                <div class="dropdown-menu navbar-dropdown dropdown-menu-right p-0 border-0 font-size-sm" aria-labelledby="profileDropdown" data-x-placement="bottom-end">
+                                    <div class="p-2">
+                                        <a class="dropdown-item py-1 d-flex align-items-center justify-content-between" href="~/vote/home/logout">
+                                            <span>Log Out</span>
+                                            <i class="mdi mdi-logout ml-1"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                        }
+
+                    </li>
+
+                </ul>
+                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+                    <span class="mdi mdi-menu"></span>
+                </button>
+            </div>
+        </nav>
+        <!-- partial -->
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:partials/_sidebar.html -->
+            <nav class="sidebar sidebar-offcanvas" id="sidebar">
+                <ul class="nav">
+                    <li class="nav-item nav-category">Overview</li>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        if (User.IsInRole("Electoral Admin"))
+                        {
+                            <li class="nav-item menu-link">
+                                <a class="nav-link" href="~/vote/home/vote">
+                                    <span class="icon-bg"><i class="mdi mdi-cube menu-icon"></i></span>
+                                    <span class="menu-title">Vote</span>
+                                </a>
+                            </li>
+                            <li class="nav-item nav-category">Admin Actions</li>
+                            <li class="nav-item menu-link">
+                                <a class="nav-link " href="~/vote/candidate/">
+                                    <span class="icon-bg"><i class="mdi mdi-cube menu-icon"></i></span>
+                                    <span class="menu-title">Manage Positions</span>
+                                </a>
+                            </li>
+                    
+                            <li class="nav-item menu-link">
+                                <a class="nav-link " href="~/vote/home/election-results/">
+                                    <span class="icon-bg"><i class="mdi mdi-cube menu-icon"></i></span>
+                                    <span class="menu-title">Election Results</span>
+                                </a>
+                            </li>
+                            @*<li class="nav-item menu-link">
+                                <a class="nav-link" href="~/vote/home/vote-results/">
+                                    <span class="icon-bg"><i class="mdi mdi-calendar-clock menu-icon"></i></span>
+                                    <span class="menu-title">Election Results</span>
+                                </a>
+                            </li>*@
+                        }
+                    }
+
+
+                    <li class="nav-item sidebar-user-actions mt-2">
+                        <div class="user-details">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        <div class="d-flex align-items-center">
+                                            @*<div class="sidebar-profile-img">
+                                                    <img src="assets/images/faces/face28.png" alt="image">
+                                                </div>*@
+
+                                            <div class="sidebar-profile-text">
+                                                <p class="mb-1">Hello, @User.Identity.Name</p>
+                                            </div>
+                                        </div>
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item sidebar-user-actions">
+                        <div class="sidebar-user-menu">
+                            <a href="~/vote/home/logout" class="nav-link">
+                                <i class="mdi mdi-logout menu-icon"></i>
+                                <span class="menu-title">Logout</span>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+            <!-- partial -->
+
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="container">
+                        <div class="row" id="proBanner">
+                            <div class="col-12">
+                                <span class="d-flex align-items-center purchase-popup">
+                                    <h4 class="page-title text-uppercase">@ViewBag.Title</h4>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    @RenderBody()
+                </div>
+
+                <!-- partial:partials/_footer.html -->
+                <footer class="footer">
+                    <div class="footer-inner-wraper">
+                        <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2020 <a href="https://www.bootstrapdash.com/" target="_blank">Lagsoba'94</a>. All rights reserved.</span>
+
+                          
+                        </div>
+                    </div>
+                </footer>
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+
+
+    @*<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>*@
+
+
+    
+    <script src="~/Content/dashboard/assets/vendors/js/vendor.bundle.base.js"></script>
+    <script src="~/Content/assets/vendors/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/Content/assets/vendors/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="~/Content/dashboard/assets/js/hoverable-collapse.js"></script>
+    <script src="~/Content/dashboard/assets/js/misc.js"></script>
+
+
+
+
+    @*@Scripts.Render("~/dashboard/js")*@
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

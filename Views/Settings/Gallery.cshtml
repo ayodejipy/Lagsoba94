@@ -1,0 +1,152 @@
+﻿@model IEnumerable<Lagsoba94.Models.Data.GalleryDTO>
+
+@{
+    ViewBag.Title = "Gallery Images";
+}
+
+<style>
+    .all-images {
+        position: relative;
+    }
+
+    .single-image {
+        text-align: center;
+        background-color: #eaeaec;
+        margin: 10px;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    .all-images button {
+        position: absolute;
+        bottom: 15px;
+        right: 15px;
+    }
+</style>
+
+<div class="container mt-5">
+    <h2 class="font-weight-bold text-center mb-4">GALLERY IMAGES</h2>
+
+    <input type="file" id="imageUpload" multiple accept="image/*" hidden />
+
+    <button class="btn btn-info" onclick="addImage()">
+        Add New Images
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" id="loader" style="display: none;"></span>
+        <span class="sr-only">Loading...</span>
+    </button>
+
+    @*<div class="alert alert-danger mt-2 alert-dismissible" id="imgError" role="alert">
+            <p>Error: Some images Image exceeded 100 KB</p>
+
+            <button type="button" class="close" id="imgErrorClose">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>*@
+
+    <div class="row all-images">
+        @foreach (var image in Model)
+        {
+            <div class="col-lg-2 col-md-3 col-4 single-image" id="@image.GalleryId">
+                <img src="@image.ImageUrl" />
+
+                <button class="btn btn-danger btn-sm mt-2" onclick="remove(@image.GalleryId)">
+                    Remove
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" id="loader-@image.GalleryId" style="display: none;"></span>
+                    <span class="sr-only">Loading...</span>
+                </button>
+            </div>
+        }
+    </div>
+</div>
+
+
+@section scripts{
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script>
+        $('#imgErrorClose').on('click', function () {
+            $('#imgError').hide('slow')
+        })
+
+        //add image
+        function addImage() {
+            $('#imageUpload').click()
+
+            // read image upload file
+            $('#imageUpload').on('change', function () {
+                $('#loader').show('slow')
+
+                // init error check
+                var isError = false
+
+                // Checking whether FormData is available in browser
+                if (window.FormData !== undefined) {
+
+                    var fileUpload = $("#imageUpload").get(0);
+                    var files = fileUpload.files;
+
+                    // Create FormData object
+                    var fileData = new FormData();
+
+                    // Looping over all files and add it to FormData object
+                    for (var i = 0; i < files.length; i++) {
+                        // check file size
+                        if (files[i].size / 1024 > 100 || files[i].fileSize > 100) {
+                            isError = true
+                        } else {
+
+                            fileData.append(files[i].name, files[i]);
+                        }
+                    }
+
+                    // send data
+                    $.ajax({
+                        url: '/Settings/AddImage',
+                        type: "POST",
+                        contentType: false, // Not to set any content header
+                        processData: false, // Not to process data
+                        data: fileData,
+                        success: function (result) {
+                            if (isError == true) {
+                                alert('Error: \nOne or more files exceeded file limit (100 KB).\nValid images has been added.')
+                            }
+
+                            window.location.reload(true);
+                        },
+                        error: function (err) {
+                            alert(err.statusText);
+                            window.location.reload(true);
+                        }
+                    });
+                } else {
+                    alert("Unable to upload images from this device, try using another device please.");
+                }
+            });
+        }
+
+        function remove(imageId) {
+            // show loader
+             $('#loader-' + imageId).show('slow')
+
+            $.ajax({
+                type: "POST",
+                url: "/Settings/RemoveImage/"+ imageId,
+                contentType: false,
+                processData: false,
+                cache: false,
+                dataType: "text",
+                //data: { id: imageId },
+                success: function (result) {
+                    var res = JSON.parse(result)
+                    if (res.Status === 1) {
+                        $('#' + imageId).remove()
+                    } else {
+                        alert(res.Message);
+                    }
+                },
+                error: function (err) {
+                    alert(err.statusText);
+                }
+            })
+        }
+    </script>
+}
